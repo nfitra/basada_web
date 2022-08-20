@@ -1,0 +1,47 @@
+.bg-gradient-primary {
+	/* background: #444; */
+}
+
+.sidebar .nav-item .collapse .collapse-inner .collapse-item.active,
+.sidebar .nav-item .collapsing .collapse-inner .collapse-item.active {
+	/* color:#444; */
+	font-weight: 900;
+}
+
+.dataTables_filter label {
+	float: right !important;
+}
+.block-20{
+	height: 200px !important;
+}
+.dataTables_paginate {
+	float: right !important;
+}
+
+.sidebar .sidebar-heading {
+	padding: 0.5rem 1rem;
+}
+
+@media only screen and (min-width: 768px) {
+	.sidebar .nav-item .nav-link {
+		padding: 0.8rem 1rem;
+	}
+}
+
+.ellipsis {
+	height: 150px;
+	position: relative;
+	overflow: hidden;
+}
+.ellipsis span {
+	position: absolute;
+	left: 0;
+	right: 0;
+	padding: 0 20px;
+	text-overflow: ellipsis;
+}
+
+.table-responsive {
+    display: inline !important;
+	background-color: red;
+}
