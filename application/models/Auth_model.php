@@ -3,6 +3,7 @@
 class Auth_model extends CI_Model
 {
     public $table = 'auth';
+    // $builder = $this->db->table('auth');
 
     function cek_email($email)
     {
@@ -14,6 +15,15 @@ class Auth_model extends CI_Model
     {
         $where = array('email'=>$email, 'fk_role' => '4ea170807728f752a1a91cb4502855ce');
         return $this->db->get_where($this->table,$where)->row();
+    }
+
+    function cek_admin($email)
+    {
+        return $this->db->select('*')->from('auth')
+        ->where('email', $email)
+        ->where('fk_role !=', "4ea170807728f752a1a91cb4502855ce")
+        ->where('fk_role !=', "37a0b01c4c89bdbd2324609c80a71054")
+        ->get()->row();
     }
 
     function get_where($where)

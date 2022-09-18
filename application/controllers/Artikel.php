@@ -6,7 +6,7 @@ class Artikel extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Artikel_model');
-        // _checkUser($this);
+        // _checkNasabah($this);
         $this->load->model('Admin_model');
         $this->load->model('Role_model');
         $this->load->model('Artikel_model');
@@ -28,7 +28,7 @@ class Artikel extends CI_Controller
 
     public function get_all_artikel()
     {
-        _checkUser($this);
+        _checkNasabah($this);
         header('Content-Type: application/json');
         $listArtikel = $this->Artikel_model->get_artikel();
         echo json_encode(['data' => $listArtikel]);
@@ -37,7 +37,7 @@ class Artikel extends CI_Controller
     public function get_limit_artikel($limit, $page)
     {
         header('Content-Type: application/json');
-        _checkUser($this);
+        _checkNasabah($this);
         $page = $page - 1;
         $listArtikel = $this->Artikel_model->get_artikel_list($limit, $page);
         echo json_encode(['data' => $listArtikel]);
@@ -46,7 +46,7 @@ class Artikel extends CI_Controller
     public function get_artikel_by_id($id)
     {
         header('Content-Type: application/json');
-        _checkUser($this);
+        _checkNasabah($this);
         $artikel = $this->Artikel_model->get_artikel_by_id($id);
         echo json_encode(['data' => $artikel]);
     }

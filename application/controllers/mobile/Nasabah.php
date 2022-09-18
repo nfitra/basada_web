@@ -7,7 +7,7 @@ class Nasabah extends CI_Controller
         parent::__construct();
         $this->load->model('Auth_model');
         $this->load->model('Nasabah_model');
-        $this->nasabah = _checkUser($this);
+        $this->nasabah = _checkNasabah($this);
         header('Content-Type: application/json');
     }
 
@@ -53,19 +53,19 @@ class Nasabah extends CI_Controller
         $userAuth = $this->Nasabah_model->cek_email($email);
         if ($userAuth) {
             $updateNasabah = $this->Nasabah_model->update_nasabah($dataNasabah, $where);
-            $status_code = 200;
+            $statusCode = 200;
             if ($updateNasabah) {
                 $tokenData['message'] = "Berhasil mengupdate data nasabah";
-                $status_code = 200;
+                $statusCode = 200;
             } else {
                 $tokenData['message'] = "Gagal mengupdate data nasabah";
-                $status_code = 401;
+                $statusCode = 401;
             }
         } else {
             $tokenData['message'] = "Tidak ada nasabah dengan email ini";
-            $status_code = 401;
+            $statusCode = 401;
         }
-        echo json_encode(array('status' => $status_code, 'data' => $tokenData));
+        echo json_encode(array('status' => $statusCode, 'data' => $tokenData));
     }
 
     public function change_password()
@@ -80,29 +80,29 @@ class Nasabah extends CI_Controller
             $dataPass = [
                 "password" => password_hash($new_password, PASSWORD_BCRYPT),
             ];
-            $status_code = 200;
+            $statusCode = 200;
             $where = ['email' => $this->nasabah->fk_auth];
             $changePassword = $this->Auth_model->update_auth($dataPass, $where);
             if ($changePassword) {
                 $tokenData['message'] = "Berhasil mengubah password";
-                $status_code = 200;
+                $statusCode = 200;
             } else {
                 $tokenData['message'] = "Gagal mengubah password";
-                $status_code = 401;
+                $statusCode = 401;
             }
         } else {
             $tokenData['message'] = "Password Salah";
-            $status_code = 401;
+            $statusCode = 401;
         }
         $token = _encodeToken($this, $tokenData);
         $tokenData['token'] = $token;
-        echo json_encode(array('status' => $status_code, 'data' => $tokenData));
+        echo json_encode(array('status' => $statusCode, 'data' => $tokenData));
     }
 
     public function conv_token()
     {
         $formdata = json_decode(file_get_contents('php://input'), true);
         $token = _encodeToken($this, $formdata);
-        echo json_encode(['Token' => $token, 'Data' => $formdata]);
+        echo json_encode(['Token' => $token, 'data' => $formdata]);
     }
 }

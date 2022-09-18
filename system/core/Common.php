@@ -400,13 +400,13 @@ if ( ! function_exists('show_error'))
 	 * @param	string
 	 * @return	void
 	 */
-	function show_error($message, $status_code = 500, $heading = 'An Error Was Encountered')
+	function show_error($message, $statusCode = 500, $heading = 'An Error Was Encountered')
 	{
-		$status_code = abs($status_code);
-		if ($status_code < 100)
+		$statusCode = abs($statusCode);
+		if ($statusCode < 100)
 		{
-			$exit_status = $status_code + 9; // 9 is EXIT__AUTO_MIN
-			$status_code = 500;
+			$exit_status = $statusCode + 9; // 9 is EXIT__AUTO_MIN
+			$statusCode = 500;
 		}
 		else
 		{
@@ -414,7 +414,7 @@ if ( ! function_exists('show_error'))
 		}
 
 		$_error =& load_class('Exceptions', 'core');
-		echo $_error->show_error($heading, $message, 'error_general', $status_code);
+		echo $_error->show_error($heading, $message, 'error_general', $statusCode);
 		exit($exit_status);
 	}
 }

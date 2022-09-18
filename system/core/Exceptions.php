@@ -150,11 +150,11 @@ class CI_Exceptions {
 	 * @param	string		$heading	Page heading
 	 * @param	string|string[]	$message	Error message
 	 * @param	string		$template	Template name
-	 * @param 	int		$status_code	(default: 500)
+	 * @param 	int		$statusCode	(default: 500)
 	 *
 	 * @return	string	Error page output
 	 */
-	public function show_error($heading, $message, $template = 'error_general', $status_code = 500)
+	public function show_error($heading, $message, $template = 'error_general', $statusCode = 500)
 	{
 		$templates_path = config_item('error_views_path');
 		if (empty($templates_path))
@@ -169,7 +169,7 @@ class CI_Exceptions {
 		}
 		else
 		{
-			set_status_header($status_code);
+			set_status_header($statusCode);
 			$message = '<p>'.(is_array($message) ? implode('</p><p>', $message) : $message).'</p>';
 			$template = 'html'.DIRECTORY_SEPARATOR.$template;
 		}

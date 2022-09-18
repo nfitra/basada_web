@@ -8,7 +8,7 @@ class Sampah extends CI_Controller
         $this->load->model('Sampah_model');
         $this->load->model('KategoriSampah_model');
         $this->load->model('Schedule_model');
-        _checkUser($this);
+        _checkNasabah($this);
         header('Content-Type: application/json');
     }
 

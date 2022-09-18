@@ -6,7 +6,7 @@ class Mutasi extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Mutasi_model');
-        $this->nasabah = _checkUser($this);
+        $this->nasabah = _checkNasabah($this);
         header('Content-Type: application/json');
     }
 

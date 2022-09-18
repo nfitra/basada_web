@@ -20,7 +20,7 @@ class Transaksi_model extends CI_Model
             r_date, 
             r_weight, 
             r_notes, 
-            r_request_date,
+            r_pickup_date,
             fk_role,
             t.fk_auth,
             n_name,

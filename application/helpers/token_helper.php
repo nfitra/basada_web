@@ -35,7 +35,42 @@ function _checkInput()
             'message' => "Belum ada inputan"
         ];
         http_response_code('401');
-        echo json_encode(array('status' => 401, 'Data' => $tokenData));die;
+        echo json_encode(array('status' => 401, 'data' => $tokenData));
+        die;
+    }
+}
+
+function _checkNasabah($ci)
+{
+    ini_set("allow_url_fopen", true);
+    header('Content-Type: application/json');
+    // $received_Token = $ci->input->request_headers('Authorization');
+    // var_dump(getallheaders());
+    // die();
+    $received_Token = getAllheaders();
+    
+    if(array_key_exists("token",$received_Token) || array_key_exists("Token",$received_Token)){
+        // var_dump(_decodeToken($ci, $received_Token['token']));
+        $email= _decodeToken($ci, $received_Token['token'])['data']->email;
+        $where=[
+            'fk_auth' => $email
+        ];
+        $auth = $ci->db->get_where('nasabah',$where);
+        if(empty($auth)){
+            $tokenData = [
+                'message' => "Tidak ada akun yang login saat ini"
+            ];
+            http_response_code('401');
+            echo json_encode(array('status' => 401, 'data' => $tokenData));die;
+        }
+        return $auth->row();
+    }
+    else{
+        $tokenData = [
+            'message' => "Tidak ada token dari user"
+        ];
+        http_response_code('401');
+        echo json_encode(array('status' => 401, 'data' => $tokenData));die;
     }
 }
 
@@ -48,19 +83,13 @@ function _checkUser($ci)
     // die();
     $received_Token = getAllheaders();
     
-    if(array_key_exists("token",$received_Token) || array_key_exists("Token",$received_Token)){
+    if(array_key_exists("token", $received_Token) || array_key_exists("Token", $received_Token)){
+        // var_dump(_decodeToken($ci, $received_Token['token']));
         $email= _decodeToken($ci, $received_Token['token'])['data']->email;
         $where=[
-            'fk_auth' => $email
+            'email' => $email
         ];
-        $auth = $ci->db->get_where('nasabah',$where);
-        if(empty($auth)){
-            $tokenData = [
-                'message' => "Tidak ada akun yang login saat ini"
-            ];
-            http_response_code('401');
-            echo json_encode(array('status' => 401, 'Data' => $tokenData));die;
-        }
+        $auth = $ci->db->get_where('auth', $where);
         return $auth->row();
     }
     else{
@@ -68,7 +97,6 @@ function _checkUser($ci)
             'message' => "Tidak ada token dari user"
         ];
         http_response_code('401');
-        echo json_encode(array('status' => 401, 'Data' => $tokenData));die;
+        echo json_encode(array('status' => 401, 'data' => $tokenData));die;
     }
 }
-?>

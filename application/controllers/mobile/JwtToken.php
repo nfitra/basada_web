@@ -36,7 +36,7 @@ class JwtToken extends CI_Controller
         $tokenData['timeStamp'] = Date('Y-m-d h:i:s');
         $tokenData['microtime'] = microtime(true) * 1000000;
         $jwtToken = $this->objOfJwt->GenerateToken($tokenData);
-        echo json_encode(array('Token'=>$jwtToken, 'Data'=>$tokenData));
+        echo json_encode(array('Token'=>$jwtToken, 'data'=>$tokenData));
     }
      
    /*************Use for token then fetch the data**************/

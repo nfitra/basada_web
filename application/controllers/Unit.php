@@ -98,7 +98,7 @@ class Unit extends CI_Controller
                     "r_weight" => $r_weight,
                     "r_image" => xss_input($upload['pic']),
                     "r_notes" => "input by admin",
-                    "r_request_date" => date("Y-m-d H:i:s"),
+                    "r_pickup_date" => date("Y-m-d H:i:s"),
                     "fk_jadwal" => $fk_jadwal,
                     "r_status" => 2
                 ];
@@ -210,7 +210,7 @@ class Unit extends CI_Controller
     {
         if ($id) {
             $update = [
-                "r_request_date" => date("Y-m-d H:i:s"),
+                "r_pickup_date" => date("Y-m-d H:i:s"),
                 "r_status" => 1
             ];
             $where = [

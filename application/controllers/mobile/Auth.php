@@ -5,7 +5,7 @@ class Auth extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->load->model('Auth_model');
         $this->load->model('Nasabah_model');
         _checkInput();
@@ -18,32 +18,56 @@ class Auth extends CI_Controller
         $email = $formdata['email'];
         $password = $formdata['password'];
         $userAuth = $this->Auth_model->cek_nasabah($email);
-        $status_code = 200;
-        if($userAuth){
-            if($userAuth->isActive == 1){
+        $statusCode = 200;
+        if ($userAuth) {
+            // var_dump($userAuth);
+            if ($userAuth->isActive == 1) {
                 $isPasswordValid = password_verify($password, $userAuth->password);
-                if($isPasswordValid){
-                    $tokenData['email'] = $userAuth->email;                    
+                if ($isPasswordValid) {
+                    $tokenData['email'] = $userAuth->email;
                     $tokenData['role'] = $userAuth->fk_role;
                     $data['message'] = "Berhasil masuk";
                     $data['data'] = $tokenData;
-                    $status_code = 200;
+                    $statusCode = 200;
+                    $token = _encodeToken($this, $data);
+                    $data['token'] = $token;
                 } else {
                     $data['message'] = "Password Salah";
-                    $status_code = 401;
+                    $statusCode = 401;
                 }
-            } else{
+            } else {
                 $data['message'] = "Email belum di aktivasi";
-                $status_code = 401;
+                $statusCode = 401;
             }
-            
-        } else{
-            $data['message'] = "Email Salah";
-            $status_code = 401;
+        } else {
+            $userAuth = $this->Auth_model->cek_admin($email);
+            // var_dump($this->db->last_query());
+            if ($userAuth) {
+                // var_dump($userAuth);
+                if ($userAuth->isActive == 1) {
+                    $isPasswordValid = password_verify($password, $userAuth->password);
+                    if ($isPasswordValid) {
+                        $tokenData['email'] = $userAuth->email;
+                        $tokenData['role'] = $userAuth->fk_role;
+                        $data['message'] = "Berhasil masuk";
+                        $data['data'] = $tokenData;
+                        $statusCode = 200;
+                        $token = _encodeToken($this, $data);
+                        $data['token'] = $token;
+                    } else {
+                        $data['message'] = "Password Salah";
+                        $statusCode = 401;
+                    }
+                } else {
+                    $data['message'] = "Email belum di aktivasi";
+                    $statusCode = 401;
+                }
+            } else {
+                $data['message'] = "Email Salah";
+                $statusCode = 401;
+            }
         }
-        $token = _encodeToken($this, $data);
-        $data['token'] = $token;
-        echo json_encode(array('status' => $status_code, 'data' => $data));
+        echo json_encode(array('status' => $statusCode, 'data' => $data));
     }
 
     public function signup()
@@ -58,41 +82,41 @@ class Auth extends CI_Controller
             "isActive" => 1
         ];
         $userAuth = $this->Auth_model->cek_nasabah($email);
-        if(!$userAuth){
+        if (!$userAuth) {
             $insertAuth = $this->Auth_model->create_admin_auth($dataAuth);
-            $status_code = 200;
-            if($insertAuth){
-                $tokenData['message'] = "Berhasil menginsert admin auth nasabah";
-                $status_code = 200;
+            $statusCode = 200;
+            if ($insertAuth) {
+                // $tokenData['message'] = "Berhasil menginsert admin auth nasabah";
+                // $statusCode = 200;
                 $dataNasabah = [
                     "_id" => generate_id(),
                     "fk_auth" => $email,
                 ];
                 $insertNasabah = $this->Nasabah_model->create_nasabah($dataNasabah);
-                if($insertNasabah){
-                    $tokenData['message'] = "Berhasil menginsert auth dan nasabah";
-                    $status_code = 200;
-                }
-                else{
+                if ($insertNasabah) {
+                    $tokenData['message'] = "Berhasil membuat akun nasabah";
+                    $statusCode = 200;
+                } else {
                     $deleteDataAuth = [
                         "email" => $email
                     ];
                     $deleteAuth = $this->Auth_model->delete_auth($deleteDataAuth);
-                    $tokenData['message'] = "Gagal menginsert nasabah";
-                    $status_code = 401;
+                    $tokenData['message'] = "Gagal membuat akun nasabah";
+                    $statusCode = 401;
                 }
+            } else {
+                $tokenData['message'] = "Gagal membuat akun nasabah";
+                $statusCode = 401;
             }
-            else{
-                $tokenData['message'] = "Gagal menginsert admin auth nasabah";
-                $status_code = 401;
-            }
-        }
-        else{
+        } else {
             $tokenData['message'] = "Email sudah dipakai";
-            $status_code = 401;
+            $statusCode = 401;
         }
         $token = _encodeToken($this, $tokenData);
         $tokenData['token'] = $token;
-        echo json_encode(array('status' => $status_code, 'data' => $tokenData));
+        echo json_encode(array(
+            'status' => $statusCode
+            // , 'data' => $tokenData
+        ));
     }
 }

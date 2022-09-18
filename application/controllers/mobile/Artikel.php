@@ -6,7 +6,7 @@ class Artikel extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Artikel_model');
-        _checkUser($this);
+        _checkNasabah($this);
         header('Content-Type: application/json');
     }
 
