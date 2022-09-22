@@ -7,7 +7,6 @@ class RequestSampah extends CI_Controller
         ini_set("allow_url_fopen", true);
         ini_set("file_uploads", "on");
         parent::__construct();
-        $this->nasabah = _checkNasabah($this);
         $this->load->model('RequestSampah_model');
         $this->load->model('Device_model');
         $this->load->model('Admin_model');
@@ -17,12 +16,14 @@ class RequestSampah extends CI_Controller
 
     public function get_admin()
     {
+        $this->nasabah = _checkNasabah($this);
         $data = $this->Admin_model->get_admin();
         echo json_encode($data);
     }
 
     public function get_min_sampah()
     {
+        $this->nasabah = _checkNasabah($this);
         // $min = read_file(base_url("/assets/file/minSampah.txt"));
         $min = file_get_contents("./assets/file/minSampah.txt", true);
         // echo $min;
@@ -32,6 +33,7 @@ class RequestSampah extends CI_Controller
 
     public function get_request_by_nasabah()
     {
+        $this->nasabah = _checkNasabah($this);
         $data = $this->RequestSampah_model->get_by_nasabah($this->nasabah->_id);
         // var_dump($data);
         for ($i = 0; $i < count($data); $i++) {
@@ -50,7 +52,26 @@ class RequestSampah extends CI_Controller
 
     public function get_request_by_admin($id)
     {
-        $data = $this->RequestSampah_model->get_by_admin($id);
+        $this->user = _checkUser($this);
+        $data = $this->RequestSampah_model->get_by_id_admin($id);
+        for ($i = 0; $i < count($data); $i++) {
+            if ($data[$i]->r_status == 0)
+                $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
+            else if ($data[$i]->r_status == 1)
+                $data[$i]->keterangan = "Menunggu Petugas Datang";
+            else if ($data[$i]->r_status == -1)
+                $data[$i]->keterangan = "Request anda telah ditolak";
+            else
+                $data[$i]->keterangan = "Uang sampah telah masuk";
+            unset($data[$i]->r_status);
+        }
+        echo json_encode($data);
+    }
+
+    public function get_request_by_current_admin()
+    {
+        $this->admin = _checkUser($this);
+        $data = $this->RequestSampah_model->get_by_email_admin($this->admin->email);
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]->r_status == 0)
                 $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
@@ -67,7 +88,25 @@ class RequestSampah extends CI_Controller
 
     public function get_request_by_admin_jadwal($idAdmin, $idJadwal)
     {
-        $data = $this->RequestSampah_model->get_by_admin_n_jadwal($idAdmin, $idJadwal);
+        $this->user = _checkUser($this);
+        $data = $this->RequestSampah_model->get_by_id_admin_n_jadwal($idAdmin, $idJadwal);
+        for ($i = 0; $i < count($data); $i++) {
+            if ($data[$i]->r_status == 0)
+                $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
+            else if ($data[$i]->r_status == 1)
+                $data[$i]->keterangan = "Menunggu Petugas Datang";
+            else if ($data[$i]->r_status == -1)
+                $data[$i]->keterangan = "Request anda telah ditolak";
+            else
+                $data[$i]->keterangan = "Uang sampah telah masuk";
+        }
+        echo json_encode($data);
+    }
+
+    public function get_request_by_current_admin_jadwal($idJadwal)
+    {
+        $this->admin = _checkUser($this);
+        $data = $this->RequestSampah_model->get_by_email_admin_n_jadwal($this->admin->email, $idJadwal);
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]->r_status == 0)
                 $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
@@ -83,6 +122,7 @@ class RequestSampah extends CI_Controller
 
     public function get_detail_request($id)
     {
+        $this->user = _checkUser($this);
         $data = $this->RequestSampah_model->get_detail($id);
         // var_dump($data);
         if ($data->r_status == 0)
@@ -99,6 +139,7 @@ class RequestSampah extends CI_Controller
 
     public function request()
     {
+        $this->nasabah = _checkNasabah($this);
         $min = file_get_contents("./assets/file/minSampah.txt", true);
 
         if ($this->input->post()) {
@@ -112,6 +153,7 @@ class RequestSampah extends CI_Controller
                 $r_weight = $this->input->post('r_weight');
                 $fk_jadwal = $this->input->post('fk_jadwal');
                 $fk_admin = $this->input->post('fk_admin');
+                $imageName = xss_input($upload['pic']);
 
                 if ($r_weight >= $min) {
                     $dataRequest = [
@@ -119,7 +161,7 @@ class RequestSampah extends CI_Controller
                         "fk_garbage" => $fk_garbage,
                         "fk_nasabah" => $fk_nasabah,
                         "r_weight" => $r_weight,
-                        "r_image" => "uploads/mobile/" . xss_input($upload['pic']),
+                        "r_image" => "uploads/mobile/" . $imageName,
                         // "r_image" => "uploads/mobile/1604164961buku.jpg",
                         "r_notes" => "input by nasabah",
                         "r_location" => "POINT(" . $lat . " " . $long . ")",
@@ -140,7 +182,7 @@ class RequestSampah extends CI_Controller
                         }
                         $title = "Permintaan penjemputan sampah baru!";
                         $message = "Dari " . $this->nasabah->n_name;
-                        $resultNotification = $FCMhelper->sendFCM($title, $message, $devices);
+                        $resultNotification = $FCMhelper->sendFCM($title, $message, $devices, base_url("uploads/mobile/" . $imageName));
                         $tokenData['message'] = "Berhasil merequest sampah";
                         $statusCode = 200;
                     } else {

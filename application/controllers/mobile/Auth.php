@@ -24,10 +24,9 @@ class Auth extends CI_Controller
             if ($userAuth->isActive == 1) {
                 $isPasswordValid = password_verify($password, $userAuth->password);
                 if ($isPasswordValid) {
-                    $tokenData['email'] = $userAuth->email;
-                    $tokenData['role'] = $userAuth->fk_role;
-                    $data['message'] = "Berhasil masuk";
-                    $data['data'] = $tokenData;
+                    $data['email'] = $userAuth->email;
+                    $data['role'] = "Nasabah";
+                    $message = "Berhasil masuk";
                     $statusCode = 200;
                     $token = _encodeToken($this, $data);
                     $data['token'] = $token;
@@ -47,27 +46,26 @@ class Auth extends CI_Controller
                 if ($userAuth->isActive == 1) {
                     $isPasswordValid = password_verify($password, $userAuth->password);
                     if ($isPasswordValid) {
-                        $tokenData['email'] = $userAuth->email;
-                        $tokenData['role'] = $userAuth->fk_role;
-                        $data['message'] = "Berhasil masuk";
-                        $data['data'] = $tokenData;
+                        $data['email'] = $userAuth->email;
+                        $data['role'] = $userAuth->role;
+                        $message = "Berhasil masuk";
                         $statusCode = 200;
                         $token = _encodeToken($this, $data);
                         $data['token'] = $token;
                     } else {
-                        $data['message'] = "Password Salah";
+                        $message = "Password Salah";
                         $statusCode = 401;
                     }
                 } else {
-                    $data['message'] = "Email belum di aktivasi";
+                    $message = "Email belum di aktivasi";
                     $statusCode = 401;
                 }
             } else {
-                $data['message'] = "Email Salah";
+                $message = "Email Salah";
                 $statusCode = 401;
             }
         }
-        echo json_encode(array('status' => $statusCode, 'data' => $data));
+        echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $data));
     }
 
     public function signup()

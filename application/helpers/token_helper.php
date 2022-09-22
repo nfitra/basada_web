@@ -51,7 +51,7 @@ function _checkNasabah($ci)
     
     if(array_key_exists("token",$received_Token) || array_key_exists("Token",$received_Token)){
         // var_dump(_decodeToken($ci, $received_Token['token']));
-        $email= _decodeToken($ci, $received_Token['token'])['data']->email;
+        $email= _decodeToken($ci, $received_Token['token'])['email'];
         $where=[
             'fk_auth' => $email
         ];
@@ -85,7 +85,7 @@ function _checkUser($ci)
     
     if(array_key_exists("token", $received_Token) || array_key_exists("Token", $received_Token)){
         // var_dump(_decodeToken($ci, $received_Token['token']));
-        $email= _decodeToken($ci, $received_Token['token'])['data']->email;
+        $email= _decodeToken($ci, $received_Token['token'])["email"];
         $where=[
             'email' => $email
         ];

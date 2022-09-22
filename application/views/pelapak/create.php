@@ -19,7 +19,6 @@
                     <button type="submit" class="btn btn-sm btn-block btn-warning text-black">Tambah Pelapak</button>
                 </form>
             </div>
-
         </div>
     </div>
 </div>

@@ -19,7 +19,13 @@ class Auth_model extends CI_Model
 
     function cek_admin($email)
     {
-        return $this->db->select('*')->from('auth')
+        return $this->db->select('
+        auth.email,
+        auth.fk_role,
+        auth.isActive,
+        auth.password,
+        roles.r_name as role')->from('auth')
+        ->join('roles','auth.fk_role = roles._id')
         ->where('email', $email)
         ->where('fk_role !=', "4ea170807728f752a1a91cb4502855ce")
         ->where('fk_role !=', "37a0b01c4c89bdbd2324609c80a71054")
@@ -52,4 +58,3 @@ class Auth_model extends CI_Model
         return $this->db->delete($this->table, $dataAuth);
     }
 }
-?>
