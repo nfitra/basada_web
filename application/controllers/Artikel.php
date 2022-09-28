@@ -31,7 +31,7 @@ class Artikel extends CI_Controller
         _checkNasabah($this);
         header('Content-Type: application/json');
         $listArtikel = $this->Artikel_model->get_artikel();
-        echo json_encode(['data' => $listArtikel]);
+        echo json_encode($listArtikel);
     }
 
     public function get_limit_artikel($limit, $page)
@@ -40,7 +40,7 @@ class Artikel extends CI_Controller
         _checkNasabah($this);
         $page = $page - 1;
         $listArtikel = $this->Artikel_model->get_artikel_list($limit, $page);
-        echo json_encode(['data' => $listArtikel]);
+        echo json_encode($listArtikel);
     }
 
     public function get_artikel_by_id($id)
@@ -48,6 +48,6 @@ class Artikel extends CI_Controller
         header('Content-Type: application/json');
         _checkNasabah($this);
         $artikel = $this->Artikel_model->get_artikel_by_id($id);
-        echo json_encode(['data' => $artikel]);
+        echo json_encode($artikel);
     }
 }

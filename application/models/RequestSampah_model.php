@@ -142,6 +142,7 @@ class RequestSampah_model extends CI_Model
     {
         $sql = "SELECT request_sampah._id,
         request_sampah.r_date,
+        request_sampah.fk_garbage,
         jenis_sampah.j_name as jenis_sampah, 
         admin.un_name as nama_admin, 
         nasabah.n_name as nama_nasabah,

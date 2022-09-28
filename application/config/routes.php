@@ -71,9 +71,9 @@ $route['api/request/admin/jadwal/(:any)']['get'] = 'mobile/RequestSampah/get_req
 
 $route['api/admin']['get'] = 'mobile/RequestSampah/get_admin';
 $route['api/admin/profile']['get'] = 'mobile/Admin/profile';
-$route['api/sampah']['get'] = 'mobile/sampah/get_sampah';
-$route['api/kategori-sampah']['get'] = 'mobile/sampah/get_kategori';
-$route['api/sampah-by-kategori/(:any)']['get'] = 'mobile/sampah/get_sampah_by_kategori';
+$route['api/sampah']['get'] = 'mobile/Sampah/get_sampah';
+$route['api/kategori-sampah']['get'] = 'mobile/Sampah/get_kategori';
+$route['api/sampah-by-kategori/(:any)']['get'] = 'mobile/Sampah/get_sampah_by_kategori';
 
-$route['api/device']['post'] = 'mobile/device/add';
-$route['api/device/(:num)']['delete'] = 'mobile/device/delete/$1';
+$route['api/device']['post'] = 'mobile/Device/add';
+$route['api/device/(:num)']['delete'] = 'mobile/Device/delete/$1';
