@@ -17,6 +17,6 @@ class Device_model extends CI_Model
 
     public function get_by_auth($email)
     {
-        return $this->db->get_where($this->table, ['fk_auth' => $email]);
+        return $this->db->get_where($this->table, ['fk_auth' => $email])->result();
     }
 }

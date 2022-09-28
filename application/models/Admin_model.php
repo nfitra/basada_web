@@ -9,6 +9,12 @@ class Admin_model extends CI_Model
         $where = array('fk_auth' => $email);
         return $this->db->get_where($this->table, $where)->num_rows();
     }
+    
+    function profile($email)
+    {
+        $where = array('fk_auth' => $email);
+        return $this->db->get_where($this->table, $where)->row();
+    }
 
     function get_where($where)
     {
