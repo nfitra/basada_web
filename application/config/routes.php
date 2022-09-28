@@ -54,30 +54,30 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 //api-route
-$route['api/login']['post'] = 'mobile/Auth/login';
-$route['api/signup']['post'] = 'mobile/Auth/signup';
+$route['api/login']['post'] = 'api/Auth/login';
+$route['api/signup']['post'] = 'api/Auth/signup';
 
-$route['api/artikel']['get'] = 'mobile/Artikel/get_all_artikel';
-$route['api/jadwal']['get'] = 'mobile/Jadwal/get_jadwal';
+$route['api/artikel']['get'] = 'api/Artikel/get_all_artikel';
+$route['api/jadwal']['get'] = 'api/Jadwal/get_jadwal';
 
-$route['api/request']['post'] = 'mobile/RequestSampah/request';
-$route['api/request/nasabah']['get'] = 'mobile/RequestSampah/get_request_by_nasabah';
-$route['api/request/admin']['get'] = 'mobile/RequestSampah/get_request_by_current_admin';
-$route['api/request/(:any)']['get'] = 'mobile/RequestSampah/get_detail_request/$1';
-$route['api/request/(:any)']['put'] = 'mobile/RequestSampah/update/$1';
-$route['api/request-by-admin/(:any)']['get'] = 'mobile/RequestSampah/get_request_by_admin/$1';
-$route['api/request-by-admin-jadwal/(:any)/(:any)']['get'] = 'mobile/RequestSampah/get_request_by_admin_jadwal/$1/$2';
-$route['api/request/admin/jadwal/(:any)']['get'] = 'mobile/RequestSampah/get_request_by_current_admin_jadwal/$1';
+$route['api/request']['post'] = 'api/RequestSampah/request';
+$route['api/request/nasabah']['get'] = 'api/RequestSampah/get_request_by_nasabah';
+$route['api/request/admin']['get'] = 'api/RequestSampah/get_request_by_current_admin';
+$route['api/request/(:any)']['get'] = 'api/RequestSampah/get_detail_request/$1';
+$route['api/request/(:any)']['put'] = 'api/RequestSampah/update/$1';
+$route['api/request-by-admin/(:any)']['get'] = 'api/RequestSampah/get_request_by_admin/$1';
+$route['api/request-by-admin-jadwal/(:any)/(:any)']['get'] = 'api/RequestSampah/get_request_by_admin_jadwal/$1/$2';
+$route['api/request/admin/jadwal/(:any)']['get'] = 'api/RequestSampah/get_request_by_current_admin_jadwal/$1';
 
-$route['api/admin']['get'] = 'mobile/RequestSampah/get_admin';
-$route['api/admin/profile']['get'] = 'mobile/Admin/profile';
-$route['api/sampah']['get'] = 'mobile/Sampah/get_sampah';
-$route['api/kategori-sampah']['get'] = 'mobile/Sampah/get_kategori';
-$route['api/sampah-by-kategori/(:any)']['get'] = 'mobile/Sampah/get_sampah_by_kategori';
+$route['api/admin']['get'] = 'api/RequestSampah/get_admin';
+$route['api/admin/profile']['get'] = 'api/Admin/profile';
+$route['api/sampah']['get'] = 'api/Sampah/get_sampah';
+$route['api/kategori-sampah']['get'] = 'api/Sampah/get_kategori';
+$route['api/sampah-by-kategori/(:any)']['get'] = 'api/Sampah/get_sampah_by_kategori';
 
-$route['api/device']['post'] = 'mobile/Device/add';
-$route['api/device/(:num)']['delete'] = 'mobile/Device/delete/$1';
+$route['api/device']['post'] = 'api/Device/add';
+$route['api/device/(:num)']['delete'] = 'api/Device/delete/$1';
 
-$route['api/nasabah']['put'] = 'mobile/Nasabah/update_nasabah';
-$route['api/nasabah/profile']['get'] = 'mobile/Nasabah/get_nasabah';
-$route['api/nasabah/saldo']['get'] = 'mobile/Nasabah/get_saldo';
+$route['api/nasabah']['put'] = 'api/Nasabah/update_nasabah';
+$route['api/nasabah/profile']['get'] = 'api/Nasabah/get_nasabah';
+$route['api/nasabah/saldo']['get'] = 'api/Nasabah/get_saldo';
