@@ -100,7 +100,7 @@ class Admin extends CI_Controller
     //             "fk_role" => "cee6de74c28ff53dcdf3da10f3ee1c05",
     //             "isActive" => 1
     //         ];
-    //         $insertAuth = $this->Auth_model->create_admin_auth($dataAuth);
+    //         $insertAuth = $this->Auth_model->create_auth($dataAuth);
     //         if($insertAuth){
     //             $fullName = xss_input($this->input->post('fullName', true));
 

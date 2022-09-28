@@ -77,3 +77,7 @@ $route['api/sampah-by-kategori/(:any)']['get'] = 'mobile/Sampah/get_sampah_by_ka
 
 $route['api/device']['post'] = 'mobile/Device/add';
 $route['api/device/(:num)']['delete'] = 'mobile/Device/delete/$1';
+
+$route['api/nasabah']['put'] = 'mobile/Nasabah/update_nasabah';
+$route['api/nasabah/profile']['get'] = 'mobile/Nasabah/get_nasabah';
+$route['api/nasabah/saldo']['get'] = 'mobile/Nasabah/get_saldo';

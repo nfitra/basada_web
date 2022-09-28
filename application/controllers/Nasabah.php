@@ -142,7 +142,7 @@ class Nasabah extends CI_Controller
             ];
             $userAuth = $this->Auth_model->cek_nasabah($email);
             if (!$userAuth) {
-                $insertAuth = $this->Auth_model->create_admin_auth($dataAuth);
+                $insertAuth = $this->Auth_model->create_auth($dataAuth);
                 if ($insertAuth) {
                     $dataNasabah = [
                         "_id" => generate_id(),

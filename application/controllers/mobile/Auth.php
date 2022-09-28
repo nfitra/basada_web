@@ -81,7 +81,7 @@ class Auth extends CI_Controller
         ];
         $userAuth = $this->Auth_model->cek_nasabah($email);
         if (!$userAuth) {
-            $insertAuth = $this->Auth_model->create_admin_auth($dataAuth);
+            $insertAuth = $this->Auth_model->create_auth($dataAuth);
             $statusCode = 200;
             if ($insertAuth) {
                 // $tokenData['message'] = "Berhasil menginsert admin auth nasabah";

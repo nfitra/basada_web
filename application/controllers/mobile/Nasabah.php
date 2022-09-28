@@ -32,13 +32,13 @@ class Nasabah extends CI_Controller
         _checkInput();
         $formdata = json_decode(file_get_contents('php://input'), true);
         $email = $this->nasabah->fk_auth;
-        $n_name = $formdata['n_name'];
-        $n_dob = $formdata['n_dob'];
-        $n_address = $formdata['n_address'];
-        $n_province = $formdata['n_province'];
-        $n_city = $formdata['n_city'];
-        $n_postcode = $formdata['n_postcode'];
-        $n_contact = $formdata['n_contact'];
+        $n_name = $formdata['nama'];
+        $n_dob = $formdata['tanggal_lahir'];
+        $n_address = $formdata['alamat'];
+        $n_province = $formdata['provinsi'];
+        $n_city = $formdata['kota'];
+        $n_postcode = $formdata['kode_pos'];
+        $n_contact = $formdata['telepon'];
         $dataNasabah = [
             "n_name" => $n_name,
             "n_dob" => $n_dob,
@@ -57,13 +57,16 @@ class Nasabah extends CI_Controller
             if ($updateNasabah) {
                 $tokenData['message'] = "Berhasil mengupdate data nasabah";
                 $statusCode = 200;
+                http_response_code('200');
             } else {
                 $tokenData['message'] = "Gagal mengupdate data nasabah";
                 $statusCode = 401;
+                http_response_code('401');
             }
         } else {
             $tokenData['message'] = "Tidak ada nasabah dengan email ini";
             $statusCode = 401;
+            http_response_code('401');
         }
         echo json_encode(array('status' => $statusCode, 'data' => $tokenData));
     }

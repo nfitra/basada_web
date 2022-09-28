@@ -82,7 +82,7 @@ class DataUnit extends CI_Controller
                 "fk_role" => "d2a8121514a7d77f7d8518bdf45e56d5",
                 "isActive" => 1
             ];
-            $insertAuth = $this->Auth_model->create_admin_auth($dataAuth);
+            $insertAuth = $this->Auth_model->create_auth($dataAuth);
             if ($insertAuth) {
                 $un_name = xss_input($this->input->post('un_name', true));
                 $un_est = xss_input($this->input->post('un_est', true));

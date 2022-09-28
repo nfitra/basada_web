@@ -66,4 +66,18 @@ class Admin_model extends CI_Model
     {
         return $this->db->update($this->table, $dataAdmin, $where);
     }
+
+    function decrementQuota($id)
+    {
+        $this->db->set('n_daily_quota', 'n_daily_quota-1', FALSE);
+        $this->db->where('_id', $id);
+        return $this->db->update($this->table);
+    }
+
+    function incrementQuota($id)
+    {
+        $this->db->set('n_daily_quota', 'n_daily_quota+1', FALSE);
+        $this->db->where('_id', $id);
+        return $this->db->update($this->table);
+    }
 }

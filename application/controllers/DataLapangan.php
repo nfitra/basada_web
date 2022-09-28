@@ -82,7 +82,7 @@ class DataLapangan extends CI_Controller
                 "fk_role" => "698544b464b4c7d9030861bce41436b7",
                 "isActive" => 1
             ];
-            $insertAuth = $this->Auth_model->create_admin_auth($dataAuth);
+            $insertAuth = $this->Auth_model->create_auth($dataAuth);
             if ($insertAuth) {
                 $un_name = xss_input($this->input->post('un_name', true));
                 $un_est = xss_input($this->input->post('un_est', true));

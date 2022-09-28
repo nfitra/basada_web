@@ -262,6 +262,7 @@ class RequestSampah extends CI_Controller
                         $message = "Request anda telah ditolak";
                     } else if ($data['r_status'] == 2) {
                         $message = "Uang sampah telah masuk";
+                        $this->Admin_model->decrementQuota($result->fk_admin);
                     } else if ($data['r_status'] == 0) {
                         $message = "Sampah Belum Dikonfirmasi";
                     }

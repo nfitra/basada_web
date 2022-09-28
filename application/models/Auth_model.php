@@ -43,7 +43,7 @@ class Auth_model extends CI_Model
         return $this->db->get($this->table);
     }
 
-    function create_admin_auth($dataAuth)
+    function create_auth($dataAuth)
     {
         return $this->db->insert($this->table, $dataAuth);
     }
