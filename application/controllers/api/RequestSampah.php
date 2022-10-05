@@ -9,8 +9,11 @@ class RequestSampah extends CI_Controller
         parent::__construct();
         $this->load->helper('fcm_helper');
         $this->load->model('RequestSampah_model');
-        $this->load->model('Device_model');
         $this->load->model('Admin_model');
+        $this->load->model('Nasabah_model');
+        $this->load->model('Transaksi_model');
+        $this->load->model('Mutasi_model');
+        $this->load->model('Device_model');
         header('Content-Type: application/json');
     }
 
@@ -276,6 +279,15 @@ class RequestSampah extends CI_Controller
         $data['r_status'] = 2;
         $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
         if ($resultQuery) {
+            $cekTransaksi = $this->Transaksi_model->check_transaksi($id);
+            if ($cekTransaksi) {
+                $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+                $message = "Transaksi sudah pernah didaftarkan";
+                $statusCode = 200;
+                http_response_code('200');
+                echo json_encode(array('status' => $statusCode, 'data' => $resultData));
+            }
+
             $message = "Uang sampah telah masuk";
             $resultData['message'] = "Selamat! Request telah selesai";
             $this->Admin_model->decrementQuota($result->fk_admin);
@@ -380,7 +392,7 @@ class RequestSampah extends CI_Controller
             _set_flashdata($this, 'message', 'danger', 'Anda Gagal menambah balance ke nasabah', 'unit');
         }
     }
-    
+
     function send_notification_to_nasabah($emailNasabah, $message)
     {
         $title = "Pembaruan request sampahmu!";

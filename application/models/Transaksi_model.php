@@ -4,6 +4,12 @@ class Transaksi_model extends CI_Model
 {
     public $table = "transaksi";
 
+    function check_transaksi($idRequest)
+    {
+        $where = array('fk_request' => $idRequest);
+        return $this->db->get_where($this->table, $where)->num_rows();
+    }
+
     function get_transaksi()
     {
         return $this->db->get($this->table)->result();
