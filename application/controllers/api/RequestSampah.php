@@ -11,7 +11,6 @@ class RequestSampah extends CI_Controller
         $this->load->model('RequestSampah_model');
         $this->load->model('Device_model');
         $this->load->model('Admin_model');
-        $this->load->model('Nasabah_model');
         header('Content-Type: application/json');
     }
 
@@ -181,14 +180,9 @@ class RequestSampah extends CI_Controller
                     if ($insertRequest) {
                         $admin = $this->Admin_model->get_where(["_id" => $fk_admin])[0];
                         $emailAdmin = $admin->fk_auth;
-                        $device = $this->Device_model->get_by_auth($emailAdmin);
-                        $devices = [];
-                        for ($i = 0; $i < count($device); $i++) {
-                            array_push($devices, $device[$i]['registration_id']);
-                        }
                         $title = "Permintaan penjemputan sampah baru!";
                         $message = "Dari " . $this->nasabah->n_name;
-                        $resultNotification = sendFCM($title, $message, $devices, base_url("uploads/mobile/" . $imageName));
+                        $resultNotification = $this->send_notification_to_admin($emailAdmin, $title, $message, $imageName);
                         $tokenData['message'] = "Berhasil merequest sampah";
                         $statusCode = 200;
                     } else {
@@ -238,6 +232,7 @@ class RequestSampah extends CI_Controller
 
     public function update($id)
     {
+        $this->user = _checkUser($this);
         $result = $this->RequestSampah_model->get_one(['_id' => $id]);
         $requestData = parsePutRequest();
         // var_dump($data);
@@ -245,7 +240,6 @@ class RequestSampah extends CI_Controller
             $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
             // var_dump($result);
             $emailNasabah = $nasabah->fk_auth;
-            $data['r_status'] = $requestData['status'];
             $data['fk_garbage'] = $requestData['id_sampah'];
             $data['r_weight'] = $requestData['berat'];
             $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
@@ -253,34 +247,10 @@ class RequestSampah extends CI_Controller
             if ($resultQuery) {
                 // var_dump("berhasil");
                 $resultData['message'] = "Berhasil mengubah data";
+                $resultData['data'] = $this->RequestSampah_model->get_detail($id);
                 $statusCode = 200;
                 http_response_code('200');
-                if ($result->r_status != $data['r_status']) {
-                    if ($data['r_status'] == 1) {
-                        $message = "Menunggu Petugas Datang";
-                    } else if ($data['r_status'] == -1) {
-                        $message = "Request anda telah ditolak";
-                    } else if ($data['r_status'] == 2) {
-                        $message = "Uang sampah telah masuk";
-                        $this->Admin_model->decrementQuota($result->fk_admin);
-                    } else if ($data['r_status'] == 0) {
-                        $message = "Sampah Belum Dikonfirmasi";
-                    }
-                    $title = "Pembaruan request sampahmu!";
-                    $device = $this->Device_model->get_by_auth($emailNasabah);
-                    // var_dump($device);
-                    $devices = [];
-                    for ($i = 0; $i < count($device); $i++) {
-                        array_push($devices, $device[$i]['registration_id']);
-                    }
-                    $resultNotification = sendFCM($title, $message, $devices);
-
-                    $resultData['data'] = $this->RequestSampah_model->get_detail($id);
-                    echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
-                } else {
-                    $resultData['data'] = $this->RequestSampah_model->get_detail($id);
-                    echo json_encode(array('status' => $statusCode, 'data' => $resultData));
-                }
+                echo json_encode(array('status' => $statusCode, 'data' => $resultData));
             } else {
                 $resultData['message'] = "Gagal mengubah data";
                 $resultData['error_message'] = $resultQuery;
@@ -295,5 +265,146 @@ class RequestSampah extends CI_Controller
             http_response_code('400');
             echo json_encode(array('status' => $statusCode, 'data' => $tokenData));
         }
+    }
+
+    public function done($id)
+    {
+        $this->user = _checkUser($this);
+        $result = $this->RequestSampah_model->get_one(['_id' => $id]);
+        $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
+        $emailNasabah = $nasabah->fk_auth;
+        $data['r_status'] = 2;
+        $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
+        if ($resultQuery) {
+            $message = "Uang sampah telah masuk";
+            $resultData['message'] = "Selamat! Request telah selesai";
+            $this->Admin_model->decrementQuota($result->fk_admin);
+
+            $dataTransaksi = [
+                "_id" => generate_id(),
+                "fk_request" => $id,
+                "fk_auth" => $this->user->email,
+            ];
+
+            $transaksi = $this->create_transaksi($dataTransaksi);
+            if ($transaksi) {
+                $statusCode = 200;
+                http_response_code('200');
+            }
+            $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
+
+            $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+            echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+        }
+    }
+
+    public function confirm($id)
+    {
+        $this->user = _checkUser($this);
+        $result = $this->RequestSampah_model->get_one(['_id' => $id]);
+        $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
+        // var_dump($result);
+        $emailNasabah = $nasabah->fk_auth;
+        $data['r_status'] = 1;
+        $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
+        if ($resultQuery) {
+            $message = "Menunggu Petugas Datang";
+            $resultData['message'] = "Request telah dikonfirmasi";
+            $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
+            $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+            $statusCode = 200;
+            http_response_code('200');
+            echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+        }
+    }
+
+    public function reject($id)
+    {
+        $this->user = _checkUser($this);
+        $result = $this->RequestSampah_model->get_one(['_id' => $id]);
+        $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
+        $emailNasabah = $nasabah->fk_auth;
+        $data['r_status'] = -1;
+        $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
+        if ($resultQuery) {
+            $message = "Request anda telah ditolak";
+            $resultData['message'] = "Request berhasil ditolak";
+            $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
+            $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+            $statusCode = 200;
+            http_response_code('200');
+            echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+        }
+    }
+
+    function create_transaksi($data)
+    {
+        $transaksi = $this->Transaksi_model->create_transaksi($data);
+        if ($transaksi) {
+            $this->create_mutasi($data);
+        }
+    }
+
+    function create_mutasi($idRequest)
+    {
+        $request = $this->RequestSampah_model->get_one(['_id' => $idRequest]);
+        $sampah = $this->Sampah_model->get_where(["_id" => $request->fk_garbage])[0];
+        $idNasabah = $request->fk_nasabah;
+        $harga = $sampah->j_price * $request->r_weight;
+        $data = [
+            "_id" => generate_id(),
+            "kode" => $sampah->j_name,
+            "m_satuan" => $request->r_weight,
+            "m_information" => "Penukaran dengan Barang $sampah->j_name",
+            "m_type" => "Debit",
+            "m_amount" => $harga,
+            "fk_nasabah" => $idNasabah
+        ];
+        $mutation = $this->Mutasi_model->create_mutasi($data);
+        if ($mutation) {
+            $this->add_balance($harga, $idNasabah);
+        } else {
+            _set_flashdata($this, 'message', 'danger', 'Anda Gagal membuat mutasi', 'unit');
+        }
+    }
+
+    function add_balance($amount, $idNasabah)
+    {
+        $where = [
+            "_id" => $idNasabah
+        ];
+        $add = $this->Nasabah_model->balance($amount, $where, "+");
+        if ($add) {
+            _set_flashdata($this, 'message', 'success', 'Request telah selesai', 'unit');
+        } else {
+            _set_flashdata($this, 'message', 'danger', 'Anda Gagal menambah balance ke nasabah', 'unit');
+        }
+    }
+    
+    function send_notification_to_nasabah($emailNasabah, $message)
+    {
+        $title = "Pembaruan request sampahmu!";
+        $device = $this->Device_model->get_by_auth($emailNasabah);
+        // var_dump($device);
+        $devices = [];
+        for ($i = 0; $i < count($device); $i++) {
+            array_push($devices, $device[$i]['registration_id']);
+        }
+        $resultNotification = sendFCM($title, $message, $devices);
+
+        return $resultNotification;
+    }
+
+    function send_notification_to_admin($emailAdmin, $title, $message, $imageName)
+    {
+        $device = $this->Device_model->get_by_auth($emailAdmin);
+        // var_dump($device);
+        $devices = [];
+        for ($i = 0; $i < count($device); $i++) {
+            array_push($devices, $device[$i]['registration_id']);
+        }
+        $resultNotification = sendFCM($title, $message, $devices, base_url("uploads/mobile/" . $imageName));
+
+        return $resultNotification;
     }
 }

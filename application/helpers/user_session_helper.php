@@ -13,7 +13,7 @@ function _get_user($ci)
     // $email = $session->session->userdata('email');
     // return $session->Admin_model->get_admin_by_email($email);
     if ($ci->session->userdata('email')) {
-        if ($ci->Admin_model->check_admin($ci->session->userdata('email'))) {
+        if ($ci->Admin_model->check_email($ci->session->userdata('email'))) {
             $email = $ci->session->userdata('email');
             return $ci->Admin_model->get_admin_by_email($email);
         } else {

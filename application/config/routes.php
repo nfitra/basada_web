@@ -61,6 +61,9 @@ $route['api/artikel']['get'] = 'api/Artikel/get_all_artikel';
 $route['api/jadwal']['get'] = 'api/Jadwal/get_jadwal';
 
 $route['api/request']['post'] = 'api/RequestSampah/request';
+$route['api/request/done/(:any)']['put'] = 'api/RequestSampah/done/$1';
+$route['api/request/confirm/(:any)']['put'] = 'api/RequestSampah/confirm/$1';
+$route['api/request/reject/(:any)']['put'] = 'api/RequestSampah/reject/$1';
 $route['api/request/nasabah']['get'] = 'api/RequestSampah/get_request_by_nasabah';
 $route['api/request/admin']['get'] = 'api/RequestSampah/get_request_by_current_admin';
 $route['api/request/(:any)']['get'] = 'api/RequestSampah/get_detail_request/$1';
@@ -70,6 +73,7 @@ $route['api/request-by-admin-jadwal/(:any)/(:any)']['get'] = 'api/RequestSampah/
 $route['api/request/admin/jadwal/(:any)']['get'] = 'api/RequestSampah/get_request_by_current_admin_jadwal/$1';
 
 $route['api/admin']['get'] = 'api/RequestSampah/get_admin';
+$route['api/admin']['put'] = 'api/Admin/update_admin';
 $route['api/admin/profile']['get'] = 'api/Admin/profile';
 $route['api/sampah']['get'] = 'api/Sampah/get_sampah';
 $route['api/kategori-sampah']['get'] = 'api/Sampah/get_kategori';

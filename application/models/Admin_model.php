@@ -4,12 +4,12 @@ class Admin_model extends CI_Model
 {
     private $table = "admin";
 
-    function check_admin($email)
+    function check_email($email)
     {
         $where = array('fk_auth' => $email);
         return $this->db->get_where($this->table, $where)->num_rows();
     }
-    
+
     function profile($email)
     {
         $where = array('fk_auth' => $email);
@@ -69,14 +69,14 @@ class Admin_model extends CI_Model
 
     function decrementQuota($id)
     {
-        $this->db->set('n_daily_quota', 'n_daily_quota-1', FALSE);
+        $this->db->set('un_daily_quota', 'un_daily_quota-1', FALSE);
         $this->db->where('_id', $id);
         return $this->db->update($this->table);
     }
 
     function incrementQuota($id)
     {
-        $this->db->set('n_daily_quota', 'n_daily_quota+1', FALSE);
+        $this->db->set('un_daily_quota', 'un_daily_quota+1', FALSE);
         $this->db->where('_id', $id);
         return $this->db->update($this->table);
     }

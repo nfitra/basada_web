@@ -53,7 +53,7 @@ class Profile extends CI_Controller
                 "un_manager" => xss_input($this->input->post('un_manager', true)),
                 "un_contact" => xss_input($this->input->post('un_contact', true)),
             ];
-            if ($this->Admin_model->check_admin($this->session->userdata('email'))) {
+            if ($this->Admin_model->check_email($this->session->userdata('email'))) {
                 $update = $this->Admin_model->update_admin($dataUpdate, $where);
             } else {
                 $update = $this->Unit_model->update_unit($dataUpdate, $where);
