@@ -51,7 +51,8 @@ class Auth extends CI_Controller
         $this->form_validation->set_rules($config);
 
         if ($this->form_validation->run() == FALSE) {
-            wrapper_auth($this, 'auth/login', $data);
+            wrapper_templates_public($this, "auth/login", $data);
+            // wrapper_auth($this, 'auth/login', $data);
         } else {
             $email = xss_input($this->input->post('email', true));
             $password = xss_input($this->input->post('password', true));

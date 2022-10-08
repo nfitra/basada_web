@@ -1,6 +1,6 @@
 <?php
 
-function wrapper_templates($templates,$nameView="dashboard/blank", $data="")
+function wrapper_templates($templates, $nameView = "dashboard/blank", $data = "")
 {
     $templates->load->view('templates/admin/header', $data);
     $templates->load->view('templates/admin/navbar');
