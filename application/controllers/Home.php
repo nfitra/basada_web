@@ -196,15 +196,18 @@ class Home extends CI_Controller
             'title' => 'Kategori Sampah - BASADA',
             'listKategori' => $this->KategoriSampah_model->get_kategori()
         );
-        $kategori = xss_input($this->input->get("kategori"), true);
-        $search = xss_input($this->input->get("search"), true);
+        // var_dump($this->input->get("kategori"));
+        // $kategori = xss_input($this->input->get("kategori"), true);
+        // $search = xss_input($this->input->get("search"), true);
+        $kategori = $this->input->get("kategori");
+        $search = $this->input->get("search");
 
         if (!empty($kategori) && !empty($search)) {
             if ($kategori === "all") {
                 $data['category'] = $this->Sampah_model->get_kategori_group($search);
                 $data['listSampah'] = $this->Sampah_model->get_sampah_with_search($search);
             } else {
-                $data['category'] = $this->Sampah_model->get_kategori_group_with_kategori($kategori, $search);
+                $data['category'] = $this->KategoriSampah_model->get_where(['_id' => $kategori]);
                 $data['listSampah'] = $this->Sampah_model->get_sampah_with_search_and_kategori($kategori, $search);
             }
         } else if (!empty($kategori) && $kategori !== "all") {
