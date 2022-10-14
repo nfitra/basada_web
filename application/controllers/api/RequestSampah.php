@@ -14,12 +14,18 @@ class RequestSampah extends CI_Controller
         $this->load->model('Transaksi_model');
         $this->load->model('Mutasi_model');
         $this->load->model('Device_model');
+        $this->load->model('Sampah_model');
         header('Content-Type: application/json');
     }
 
     public function index()
     {
         echo json_encode("Data");
+    }
+
+    public function test($id)
+    {
+        var_dump($id);
     }
 
     public function get_admin()
@@ -279,39 +285,39 @@ class RequestSampah extends CI_Controller
         $data['r_status'] = 2;
         $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
         if ($resultQuery) {
+            $resultData['data'] = $this->RequestSampah_model->get_detail($id);
             $cekTransaksi = $this->Transaksi_model->check_transaksi($id);
             if ($cekTransaksi) {
-                $resultData['data'] = $this->RequestSampah_model->get_detail($id);
-                $message = "Transaksi sudah pernah didaftarkan";
+                $resultData['message'] = "Transaksi sudah pernah didaftarkan";
                 $statusCode = 200;
                 http_response_code('200');
                 echo json_encode(array('status' => $statusCode, 'data' => $resultData));
+            } else {
+                $message = "Uang sampah telah masuk";
+                $resultData['message'] = "Selamat! Request telah selesai";
+                $this->Admin_model->decrementQuota($result->fk_admin);
+
+                $dataTransaksi = [
+                    "_id" => generate_id(),
+                    "fk_request" => $id,
+                    "fk_auth" => $this->user->email,
+                ];
+
+                $transaksi = $this->create_transaksi($dataTransaksi);
+                if ($transaksi) {
+                    $statusCode = 200;
+                    http_response_code('200');
+                }
+                $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
+
+                echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
             }
-
-            $message = "Uang sampah telah masuk";
-            $resultData['message'] = "Selamat! Request telah selesai";
-            $this->Admin_model->decrementQuota($result->fk_admin);
-
-            $dataTransaksi = [
-                "_id" => generate_id(),
-                "fk_request" => $id,
-                "fk_auth" => $this->user->email,
-            ];
-
-            $transaksi = $this->create_transaksi($dataTransaksi);
-            if ($transaksi) {
-                $statusCode = 200;
-                http_response_code('200');
-            }
-            $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
-
-            $resultData['data'] = $this->RequestSampah_model->get_detail($id);
-            echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
         }
     }
 
     public function confirm($id)
     {
+        var_dump($id);
         $this->user = _checkUser($this);
         $result = $this->RequestSampah_model->get_one(['_id' => $id]);
         $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
@@ -332,6 +338,7 @@ class RequestSampah extends CI_Controller
 
     public function reject($id)
     {
+        var_dump($id);
         $this->user = _checkUser($this);
         $result = $this->RequestSampah_model->get_one(['_id' => $id]);
         $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
@@ -345,6 +352,7 @@ class RequestSampah extends CI_Controller
             $resultData['data'] = $this->RequestSampah_model->get_detail($id);
             $statusCode = 200;
             http_response_code('200');
+            // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
             echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
         }
     }
@@ -353,30 +361,30 @@ class RequestSampah extends CI_Controller
     {
         $transaksi = $this->Transaksi_model->create_transaksi($data);
         if ($transaksi) {
-            $this->create_mutasi($data);
+            $this->create_mutasi($data['fk_request']);
         }
     }
 
     function create_mutasi($idRequest)
     {
-        $request = $this->RequestSampah_model->get_one(['_id' => $idRequest]);
-        $sampah = $this->Sampah_model->get_where(["_id" => $request->fk_garbage])[0];
+        $request = $this->RequestSampah_model->get_detail($idRequest);
+        // $request = $this->RequestSampah_model->get_one(['_id' => $idRequest]);
+        // $sampah = $this->Sampah_model->get_where(["_id" => $request->fk_garbage])[0];
         $idNasabah = $request->fk_nasabah;
-        $harga = $sampah->j_price * $request->r_weight;
         $data = [
             "_id" => generate_id(),
-            "kode" => $sampah->j_name,
+            "kode" => $request->j_name,
             "m_satuan" => $request->r_weight,
-            "m_information" => "Penukaran dengan Barang $sampah->j_name",
+            "m_information" => "Penukaran dengan Barang $request->jenis_sampah",
             "m_type" => "Debit",
-            "m_amount" => $harga,
+            "m_amount" => $request->harga,
             "fk_nasabah" => $idNasabah
         ];
         $mutation = $this->Mutasi_model->create_mutasi($data);
         if ($mutation) {
-            $this->add_balance($harga, $idNasabah);
+            $this->add_balance($request->harga, $idNasabah);
         } else {
-            _set_flashdata($this, 'message', 'danger', 'Anda Gagal membuat mutasi', 'unit');
+            echo json_encode(array('status' => 500, 'message' => 'Gagal membuat mutasi'));
         }
     }
 
@@ -386,10 +394,8 @@ class RequestSampah extends CI_Controller
             "_id" => $idNasabah
         ];
         $add = $this->Nasabah_model->balance($amount, $where, "+");
-        if ($add) {
-            _set_flashdata($this, 'message', 'success', 'Request telah selesai', 'unit');
-        } else {
-            _set_flashdata($this, 'message', 'danger', 'Anda Gagal menambah balance ke nasabah', 'unit');
+        if (!$add) {
+            echo json_encode(array('status' => 500, 'message' => 'Gagal membuat mutasi'));
         }
     }
 
@@ -397,7 +403,6 @@ class RequestSampah extends CI_Controller
     {
         $title = "Pembaruan request sampahmu!";
         $device = $this->Device_model->get_by_auth($emailNasabah);
-        // var_dump($device);
         $devices = [];
         for ($i = 0; $i < count($device); $i++) {
             array_push($devices, $device[$i]['registration_id']);
@@ -410,7 +415,6 @@ class RequestSampah extends CI_Controller
     function send_notification_to_admin($emailAdmin, $title, $message, $imageName)
     {
         $device = $this->Device_model->get_by_auth($emailAdmin);
-        // var_dump($device);
         $devices = [];
         for ($i = 0; $i < count($device); $i++) {
             array_push($devices, $device[$i]['registration_id']);

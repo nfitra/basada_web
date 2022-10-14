@@ -92,6 +92,7 @@ $autoload['drivers'] = array();
 $autoload['helper'] = array(
     'url',
     'ci',
+    'fcm',
     'token',
     'wrapper_templates', 
     'wrapper_templates_auth', 
