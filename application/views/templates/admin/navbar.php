@@ -12,12 +12,12 @@
         <div class="sidebar-brand-text mx-3">Bank Sampah</div>
       </a>
       <!-- Divider -->
-      <hr class="sidebar-divider">
-      <div class="sidebar-heading">
-        <div class="text-white">
+      <!-- <hr class="sidebar-divider"> -->
+      <div class="sidebar-heading text-center">
+        <!-- <div class="text-white" style="font-size: 16px;">
           <?= $user->un_name ?>
-        </div>
-        <div class="text-white">
+        </div> -->
+        <div class="text-white" style="font-size: 16px;">
           <?= $user->r_name ?>
         </div>
       </div>
@@ -64,7 +64,7 @@
         <?php foreach ($listSubMenu as $subMenu) : ?>
           <li class="nav-item <?= $subMenu->sm_title == $active ? "active" :  ""; ?>">
             <a class="nav-link" href="<?= base_url($subMenu->sm_url) ?>">
-              <i class=" fas fa-fw <?= $subMenu->sm_icon ?> "></i>
+              <i class=" fas fa-fw <?= $subMenu->sm_icon ?>"></i>
               <span><?= $subMenu->sm_title ?></span>
             </a>
           </li>
@@ -164,12 +164,12 @@
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Ada <span id="notif" class="badge badge-danger"></span> Notif</span>
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small"> <span id="notif" class="badge badge-danger"></span>Notifikasi</span>
                 <i class="fas fw fa-envelope text-gray-700"></i>
               </a>
               <!-- Dropdown - User Information -->
               <div id="notifData" class="dropdown-menu dropdown-menu-right shadow animated--grow-in p-3" aria-labelledby="notifDropdown">
-                
+
             </li>
             <li class="nav-item dropdown no-arrow">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -196,52 +196,56 @@
         <!-- End of Topbar -->
 
         <script>
-    fetchData();
-    
-    function fetchData(){
-        // fetch('./API/notifAPI')
-        //     .then((res)=>res.json())
-        //     .then((data)=>{
-        //         displayNotif(data.data);
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-        //     })
-        const a = <?= json_encode($requests) ?>;
-          displayNotif(a)
-    }
-    setInterval(()=>{
-        fetchData();
-    }, 1000 * 60 * 5)
-        
-    function displayNotif(data) {
-        const idNotif = document.getElementById("id-notifData");
-        if(idNotif) {
-            idNotif.remove();
-        }
-        const notif = document.getElementById('notif');
-        const length = data.length;
-        notif.innerHTML = length;
-        
-        const notifData = document.getElementById('notifData');
-        const div = document.createElement("div");
-        div.setAttribute("id", "id-notifData");
-        notifData.appendChild(div);
-        data.map((d)=>{
-            const b = document.createElement("b");
-            b.innerHTML = d.n_name;
-            
-            const p = document.createElement("p");
-            p.innerHTML = d.j_name + `(${d.n_contact})`;
-            
-            const divider = document.createElement("div");
-            divider.classList.add("dropdown-divider")
-            
-            div.appendChild(b);
-            div.appendChild(p);
-            div.appendChild(divider);
-            // console.log(d);
-            return;
-        })
-    }
-</script>
+          fetchData();
+
+          function fetchData() {
+            // fetch('./API/notifAPI')
+            //     .then((res)=>res.json())
+            //     .then((data)=>{
+            //         displayNotif(data.data);
+            //     })
+            //     .catch(err => {
+            //         console.log(err);
+            //     })
+            <?php if (isset($requests)) {
+            ?>
+              const a = <?= json_encode($requests) ?>;
+              displayNotif(a)
+            <?php
+            } ?>
+          }
+          setInterval(() => {
+            fetchData();
+          }, 1000 * 60 * 5)
+
+          function displayNotif(data) {
+            const idNotif = document.getElementById("id-notifData");
+            if (idNotif) {
+              idNotif.remove();
+            }
+            const notif = document.getElementById('notif');
+            const length = data.length;
+            notif.innerHTML = length;
+
+            const notifData = document.getElementById('notifData');
+            const div = document.createElement("div");
+            div.setAttribute("id", "id-notifData");
+            notifData.appendChild(div);
+            data.map((d) => {
+              const b = document.createElement("b");
+              b.innerHTML = d.n_name;
+
+              const p = document.createElement("p");
+              p.innerHTML = d.j_name + `(${d.n_contact})`;
+
+              const divider = document.createElement("div");
+              divider.classList.add("dropdown-divider")
+
+              div.appendChild(b);
+              div.appendChild(p);
+              div.appendChild(divider);
+              // console.log(d);
+              return;
+            })
+          }
+        </script>

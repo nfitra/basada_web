@@ -12,7 +12,7 @@ $(document).ready(() => {
 		"#table-balance",
 		"#table-upload",
 		"#table-jadwal",
-		"#table-request",
+		// "#table-request",
 		"#table-pengeluaran",
 		"#table-pemasukan",
 		"#table-mutasi",
@@ -24,12 +24,27 @@ $(document).ready(() => {
 	});
 });
 
+$("#table-request").dataTable({
+	columns: [
+		null,
+		{ width: "10%" },
+		null,
+		{ width: "10%" },
+		null,
+		null,
+		{ width: "13%" },
+		{ width: "15%" },
+		{ width: "10%" },
+		{ width: "20%" },
+	],
+});
+$("#table-jadwal-sampah").DataTable({
+	lengthMenu: [5, 10, 20, 50],
+	searching: false,
+});
+
 const makeTable = (id) => {
 	$(id).DataTable({
 		lengthMenu: [5, 10, 20, 50],
 	});
 };
-$("#table-jadwal-sampah").DataTable({
-	lengthMenu: [5, 10, 20, 50],
-	searching: false,
-});

@@ -29,60 +29,61 @@
                                 }
                                 ?>
                                 <div class="table-responsive">
-                                <table id="table-request" class=" mt-3 mb-3 table table-hover table-responsive table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Nama Nasabah</th>
-                                            <th>Kontak</th>
-                                            <th>Jenis sampah</th>
-                                            <th>Berat</th>
-                                            <th>Harga</th>
-                                            <th>Gambar</th>
-                                            <th>Jadwal</th>
-                                            <th>Tanggal Request</th>
-                                            <th>Catatan</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php $no = 1; ?>
-                                        <?php foreach ($requests as $request) : ?>
-                                            <tr>
-                                                <td><?= $no++ ?></td>
-                                                <td>
-                                                    <a class="text-warning" href="" data-toggle="modal" data-target="#userModal" onclick="showData('<?= xss($request->id_nasabah) ?>')">
-                                                        <?= xss($request->n_name) ?>
-                                                    </a>
-                                                </td>
-                                                <td><?= xss($request->n_contact) ?></td>
-                                                <td><?= xss($request->j_name) ?></td>
-                                                <td><?= xss($request->r_weight) ?></td>
-                                                <td><?= xss($request->harga) ?></td>
-                                                <td><img style="width:10em; background:#eee; padding:10px" src="<?= base_url(xss($request->r_image)) ?>" alt="<?= xss($request->r_image) ?>"></td>
-                                                <td><?= xss($request->s_day) ?>, <?= xss($request->s_time) ?> - <?= xss($request->s_weather) ?></td>
-                                                <td><?= xss($request->r_date) ?></td>
-                                                <td><?= xss($request->r_notes) ?></td>
-                                                <td>
-                                                    <a href="<?= base_url('unit/update/') . $request->_id ?>" class="btn btn-sm btn-warning text-black">
-                                                        <i class="fas fa-fw fa-edit"></i>
-                                                    </a>
-                                                    <?php if ($request->r_status == 0) : ?>
-                                                        <a href="#" class="btn btn-sm btn-warning" onclick="$
-                                                        confirm('Apakah Anda ingin mengonfirmasi request sampah ini?') === true ? window.location.href= '<?= base_url('unit/accept_request/') . $request->_id ?>' : console.log(false)">
-                                                            <i class="fas fa-check"></i>
-                                                        </a>
-                                                    <?php else : ?>
-                                                        <a href="#" class="btn btn-sm btn-success" onclick="$
-                                                        confirm('Apakah Anda ingin mencairkan uang ini?') === true ? window.location.href= '<?= base_url('unit/finish_request/') . $request->_id ?>' : console.log(false)">
-                                                            <i class="fas fa-dollar-sign"></i>
-                                                        </a>
-                                                    <?php endif; ?>
-                                                </td>
+                                    <table id="table-request" class="mt-3 mb-3 table table-hover table-bordered">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th>No</th>
+                                                <th>Nama Nasabah</th>
+                                                <th>Kontak</th>
+                                                <th>Jenis sampah</th>
+                                                <th>Berat</th>
+                                                <th>Harga</th>
+                                                <!-- <th>Gambar</th> -->
+                                                <th>Jadwal</th>
+                                                <th>Tanggal Request</th>
+                                                <th>Catatan</th>
+                                                <th>Action</th>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php $no = 1; ?>
+                                            <?php foreach ($requests as $request) : ?>
+                                                <tr>
+                                                    <td><?= $no++ ?></td>
+                                                    <td>
+                                                        <a class="text-warning" href="" data-toggle="modal" data-target="#userModal" onclick="showData('<?= xss($request->id_nasabah) ?>')">
+                                                            <?= xss($request->n_name) ?>
+                                                        </a>
+                                                    </td>
+                                                    <td><?= xss($request->n_contact) ?></td>
+                                                    <td><?= xss($request->j_name) ?></td>
+                                                    <td><?= xss($request->r_weight) ?></td>
+                                                    <td><?= xss($request->harga) ?></td>
+                                                    <!-- <td><img style="width:10em; background:#eee; padding:10px" src="<?= base_url(xss($request->r_image)) ?>" alt="<?= xss($request->r_image) ?>"></td> -->
+                                                    <td><?= xss($request->s_day) ?>, <?= xss($request->s_time) ?> <br> <?= xss($request->s_weather) ?></td>
+                                                    <td><?= date('d-m-Y | H:i:s', strtotime($request->r_date)) ?></td>
+                                                    <!-- <td><?= xss($request->r_date) ?></td> -->
+                                                    <td><?= xss($request->r_notes) ?></td>
+                                                    <td>
+                                                        <a href="<?= base_url('unit/update/') . $request->_id ?>" class="btn btn-sm btn-warning text-black">
+                                                            <i class="fas fa-fw fa-edit"></i> Edit
+                                                        </a>
+                                                        <?php if ($request->r_status == 0) : ?>
+                                                            <a href="#" class="btn btn-sm btn-warning" onclick="$
+                                                        confirm('Apakah Anda ingin mengonfirmasi request sampah ini?') === true ? window.location.href= '<?= base_url('unit/accept_request/') . $request->_id ?>' : console.log(false)">
+                                                                <i class="fas fa-check"></i> Konfirmasi
+                                                            </a>
+                                                        <?php else : ?>
+                                                            <a href="#" class="btn btn-sm btn-success" onclick="$
+                                                        confirm('Apakah Anda ingin mencairkan uang ini?') === true ? window.location.href= '<?= base_url('unit/finish_request/') . $request->_id ?>' : console.log(false)">
+                                                                <i class="fas fa-dollar-sign"></i> Cairkan
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

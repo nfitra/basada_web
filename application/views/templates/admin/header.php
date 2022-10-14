@@ -19,4 +19,12 @@
     <link href="<?= base_url() ?>/assets/css/styleAdmin.css" rel="stylesheet">
 
     <script src="<?= base_url() ?>/assets/vendor/jquery/jquery.min.js"></script>
+    <style>
+        .table-bordered thead{
+            font-size: 18px;
+        }
+        .navbar-nav .nav-item .nav-link span{
+            font-size: 18px;
+        }
+    </style>
 </head>

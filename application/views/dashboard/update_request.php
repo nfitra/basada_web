@@ -14,12 +14,13 @@
                         <?php endforeach; ?>
                     </select>
                     <label for="">Nasabah</label>
-                    <?= form_error('fk_nasabah', '<small class="text-danger pl-3">', '</small>') ?>
+                    <input type="text" class="form-control mb-3" value="<?= $request->nama_nasabah ?>" disabled>
+                    <!-- <?= form_error('fk_nasabah', '<small class="text-danger pl-3">', '</small>') ?>
                     <select name="fk_nasabah" class="form-control js-example-basic-single">
                         <?php foreach ($listNasabah as $nasabah) : ?>
                             <option value="<?= $nasabah->_id ?>" <?= ($nasabah->_id == $request->fk_nasabah) ? "selected" : "" ?>><?= $nasabah->n_name ?></option>
                         <?php endforeach; ?>
-                    </select>
+                    </select> -->
                     <label for="" class="mt-3">Berat Sampah</label>
                     <?= form_error('r_weight','<small class="text-danger pl-3">','</small>') ?>
                     <input name="r_weight" type="text" class="form-control mb-3" value="<?= $request->r_weight ?>" >
