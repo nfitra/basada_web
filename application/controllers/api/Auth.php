@@ -113,8 +113,7 @@ class Auth extends CI_Controller
         $token = _encodeToken($this, $tokenData);
         $tokenData['token'] = $token;
         echo json_encode(array(
-            'status' => $statusCode
-            // , 'data' => $tokenData
+            'status' => $statusCode, 'data' => $tokenData
         ));
     }
 }
