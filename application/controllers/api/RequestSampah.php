@@ -322,10 +322,10 @@ class RequestSampah extends CI_Controller
                     $statusCode = 200;
                     http_response_code('200');
                 }
-                // $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
+                $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
 
-                echo json_encode(array('status' => $statusCode, 'data' => $resultData));
-                // echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+                // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
+                echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
             }
         }
     }
@@ -342,12 +342,12 @@ class RequestSampah extends CI_Controller
         if ($resultQuery) {
             $message = "Menunggu Petugas Datang";
             $resultData['message'] = "Request telah dikonfirmasi";
-            // $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
+            $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
             $resultData['data'] = $this->RequestSampah_model->get_detail($id);
             $statusCode = 200;
             http_response_code('200');
-            echo json_encode(array('status' => $statusCode, 'data' => $resultData));
-            // echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+            // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
+            echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
         }
     }
 
@@ -362,25 +362,14 @@ class RequestSampah extends CI_Controller
         if ($resultQuery) {
             $message = "Request anda telah ditolak";
             $resultData['message'] = "Request berhasil ditolak";
-            // $title = "Pembaruan request sampahmu!";
-            // $device = $this->Device_model->get_by_auth($emailNasabah);
-            // $devices = [];
-            // for ($i = 0; $i < count($device); $i++) {
-            //     array_push($devices, $device[$i]->registration_id);
-            // }
-            // $resultNotification = sendFCM($title, $message, $devices);
-            // $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
+            $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
             // var_dump($resultNotification);
             $resultData['data'] = $this->RequestSampah_model->get_detail($id);
             $statusCode = 200;
             http_response_code('200');
             // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
-            echo json_encode(array('status' => $statusCode, 'data' => $resultData));
-            // echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+            echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
         }
-        //else {
-        //     echo json_encode('error');
-        // }
     }
 
     function create_transaksi($data)
