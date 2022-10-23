@@ -79,7 +79,7 @@ $route['api/admin']['put'] = 'api/Admin/update_admin';
 $route['api/admin/profile']['get'] = 'api/Admin/profile';
 $route['api/sampah']['get'] = 'api/Sampah/get_sampah';
 $route['api/kategori-sampah']['get'] = 'api/Sampah/get_kategori';
-$route['api/sampah-by-kategori/(:any)']['get'] = 'api/Sampah/get_sampah_by_kategori';
+$route['api/sampah-by-kategori/(:any)']['get'] = 'api/Sampah/get_sampah_by_kategori/$1';
 
 $route['api/device']['post'] = 'api/Device/add';
 $route['api/device/(:num)']['delete'] = 'api/Device/delete/$1';
@@ -87,3 +87,6 @@ $route['api/device/(:num)']['delete'] = 'api/Device/delete/$1';
 $route['api/nasabah']['put'] = 'api/Nasabah/update_nasabah';
 $route['api/nasabah/profile']['get'] = 'api/Nasabah/get_nasabah';
 $route['api/nasabah/saldo']['get'] = 'api/Nasabah/get_saldo';
+
+$route['api/artikel']['get'] = 'api/Artikel/get_all_artikel';
+$route['api/artikel/(:any)']['get'] = 'api/Artikel/get_artikel_by_id/$1';

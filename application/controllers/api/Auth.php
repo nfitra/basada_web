@@ -92,28 +92,30 @@ class Auth extends CI_Controller
                 ];
                 $insertNasabah = $this->Nasabah_model->create_nasabah($dataNasabah);
                 if ($insertNasabah) {
-                    $tokenData['message'] = "Berhasil membuat akun nasabah";
+                    $data['email'] = $email;
+                    $data['role'] = 'Nasabah';
+                    $message = "Berhasil membuat akun nasabah";
                     $statusCode = 200;
+                    $token = _encodeToken($this, $data);
+                    $data['token'] = $token;
                 } else {
                     $deleteDataAuth = [
                         "email" => $email
                     ];
                     $deleteAuth = $this->Auth_model->delete_auth($deleteDataAuth);
-                    $tokenData['message'] = "Gagal membuat akun nasabah";
+                    $message = "Gagal membuat akun nasabah";
                     $statusCode = 401;
                 }
             } else {
-                $tokenData['message'] = "Gagal membuat akun nasabah";
+                $message = "Gagal membuat akun nasabah";
                 $statusCode = 401;
             }
         } else {
-            $tokenData['message'] = "Email sudah dipakai";
+            $message = "Email sudah dipakai";
             $statusCode = 401;
         }
-        $token = _encodeToken($this, $tokenData);
-        $tokenData['token'] = $token;
         echo json_encode(array(
-            'status' => $statusCode, 'data' => $tokenData
+            'status' => $statusCode, 'message' => $message, 'data' => $data
         ));
     }
 }
