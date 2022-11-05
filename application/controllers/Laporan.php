@@ -89,12 +89,12 @@ class Laporan extends CI_Controller
                 $date2 = $temp;
             }
 
-            if ($jenis == "excel")  $this->downloadExcel($laporan, $date, $date2, $namaLaporan);
-            else                    $this->downloadPDF($laporan, $date, $date2, $namaLaporan);
+            if ($jenis == "excel")  $this->downloadExcel($laporan, $namaLaporan, $date, $date2);
+            else                    $this->downloadPDF($laporan, $namaLaporan, $date, $date2);
         }
     }
 
-    function downloadExcel($laporan, $date = "", $date2 = "", $judul)
+    function downloadExcel($laporan, $judul, $date = "", $date2 = "")
     {
         $status = xss_input($this->input->post('status', true));
         if ($laporan == "Nasabah") {
@@ -329,7 +329,7 @@ class Laporan extends CI_Controller
         $write->save('php://output');
     }
 
-    function downloadPDF($laporan, $date = "", $date2 = "", $judul)
+    function downloadPDF($laporan, $judul, $date = "", $date2 = "")
     {
         $pdf = new Pdf('P', 'mm', 'A4', true, 'UTF-8', false);
         $pdf->SetTitle('Laporan ' . $judul);

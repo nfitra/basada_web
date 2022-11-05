@@ -19,7 +19,7 @@ class Admin extends CI_Controller
     {
         $data = array(
             'title' => 'Dashboard',
-            'active' => 'Dashboard Admin',
+            'active' => 'Dashboard',
             'user' => _get_user($this),
             'nasabah' => $this->Nasabah_model->get_total(),
             'unit' => $this->Unit_model->get_total(),

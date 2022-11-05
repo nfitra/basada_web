@@ -63,7 +63,6 @@ class RequestSampah extends CI_Controller
     {
         $this->nasabah = _checkNasabah($this);
         $data = $this->RequestSampah_model->get_by_nasabah($this->nasabah->_id);
-        // var_dump($data);
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]->r_status == 0)
                 $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
@@ -198,7 +197,6 @@ class RequestSampah extends CI_Controller
                         "fk_admin" => $fk_admin,
                         "r_status" => 0
                     ];
-                    // var_dump($dataRequest);
                     $insertRequest = $this->RequestSampah_model->create_request($dataRequest);
                     if ($insertRequest) {
                         $admin = $this->Admin_model->get_where(["_id" => $fk_admin])[0];
@@ -237,7 +235,7 @@ class RequestSampah extends CI_Controller
         $new_name = time() . str_replace(' ', '_', $_FILES[$name]['name']);
         $config['upload_path']          = './uploads/mobile/';
         $config['file_name']            = $new_name;
-        $config['allowed_types']        = 'jpg|png|gif';
+        $config['allowed_types']        = 'jpg|jpeg|png';
         $config['max_size']             = 2048;
 
         $this->load->library('upload', $config);
@@ -335,19 +333,27 @@ class RequestSampah extends CI_Controller
         $this->user = _checkUser($this);
         $result = $this->RequestSampah_model->get_one(['_id' => $id]);
         $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
-        // var_dump($result);
+        $admin = $this->Admin_model->get_admin_by_id($result->fk_admin);
         $emailNasabah = $nasabah->fk_auth;
-        $data['r_status'] = 1;
-        $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
-        if ($resultQuery) {
-            $message = "Menunggu Petugas Datang";
-            $resultData['message'] = "Request telah dikonfirmasi";
-            $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
-            $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+        if ($admin->un_daily_quota > 0) {
+            $data['r_status'] = 1;
+            var_dump($data);
+            $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
+            if ($resultQuery) {
+                $message = "Menunggu Petugas Datang";
+                $resultData['message'] = "Request telah dikonfirmasi";
+                $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
+                $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+                $statusCode = 200;
+                http_response_code('200');
+                // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
+                echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+            }
+        } else {
             $statusCode = 200;
             http_response_code('200');
-            // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
-            echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+            $resultData['message'] = "Maaf, kuota harian telah habis!";
+            echo json_encode(array('status' => $statusCode, 'data' => $resultData));
         }
     }
 

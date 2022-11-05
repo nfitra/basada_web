@@ -23,7 +23,7 @@ class Induk extends CI_Controller
     {
         $data = array(
             'title' => 'Dashboard Induk',
-            'active' => 'Dashboard Induk',
+            'active' => 'Dashboard',
             'user' => _get_user($this),
             'requests' => $this->RequestSampah_model->get_all_item_by_admin($this->session->userdata('email')),
             'nasabah' => $this->Nasabah_model->get_total(),

@@ -82,7 +82,7 @@ class RequestSampah_model extends CI_Model
         JOIN nasabah ON request_sampah.fk_nasabah = nasabah._id
         JOIN schedule on request_sampah.fk_jadwal = schedule._id
         WHERE request_sampah.fk_nasabah = '" . $where . "'
-        ORDER BY request_sampah.r_date ASC;";
+        ORDER BY request_sampah.r_date DESC;";
         return $this->db->query($sql)->result();
     }
 
@@ -108,7 +108,7 @@ class RequestSampah_model extends CI_Model
         JOIN schedule on request_sampah.fk_jadwal = schedule._id
         WHERE request_sampah.fk_admin = '" . $idAdmin . "'
         AND request_sampah.fk_jadwal = '" . $idJadwal . "'
-        ORDER BY request_sampah.r_date ASC;";
+        ORDER BY request_sampah.r_date DESC;";
         return $this->db->query($sql)->result();
     }
 
@@ -134,7 +134,7 @@ class RequestSampah_model extends CI_Model
         JOIN schedule on request_sampah.fk_jadwal = schedule._id
         WHERE admin.fk_auth = '" . $emailAdmin . "'
         AND request_sampah.fk_jadwal = '" . $idJadwal . "'
-        ORDER BY request_sampah.r_date ASC;";
+        ORDER BY request_sampah.r_date DESC;";
         return $this->db->query($sql)->result();
     }
 
