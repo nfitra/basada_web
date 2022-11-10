@@ -143,9 +143,9 @@ class Induk extends CI_Controller
                 'title' => 'Update data request',
                 'active' => 'Dashboard Induk',
                 'user' => _get_user($this),
-                'request' => $this->RequestSampah_model->get_one($where),
+                'request' => $this->RequestSampah_model->get_detail($id),
                 'listSampah' => $this->Sampah_model->get_all(),
-                'listNasabah' => $this->Nasabah_model->get_nasabah()
+                // 'listNasabah' => $this->Nasabah_model->get_nasabah()
             );
 
             $config = [

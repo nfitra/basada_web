@@ -18,6 +18,7 @@ class Lapangan extends CI_Controller
         $this->load->model('Schedule_model');
         $this->load->model('Sampah_model');
     }
+    
     function index()
     {
         $unit = $this->Unit_model->get_where(["fk_auth" => $this->session->userdata('email')])[0]->fk_admin;
@@ -122,7 +123,7 @@ class Lapangan extends CI_Controller
                 'title' => 'Update data request',
                 'active' => 'Dashboard Unit',
                 'user' => _get_user($this),
-                'request' => $this->RequestSampah_model->get_one($where),
+                'request' => $this->RequestSampah_model->get_detail($id),
                 'listSampah' => $this->Sampah_model->get_all()
             );
 

@@ -5,7 +5,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; NooBeeID</span>
+            <span>Copyright &copy; Politeknik Caltex Riau</span>
           </div>
         </div>
       </footer>

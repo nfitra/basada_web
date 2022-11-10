@@ -10,10 +10,16 @@ class Nasabah_model extends CI_Model
         return $this->db->get_where($this->table, $where)->row();
     }
 
+    function profile($email)
+    {
+        $where = array('fk_auth' => $email);
+        return $this->db->get_where($this->table, $where)->row();
+    }
+
     function get_nasabah()
     {
         $this->db->where("isExist", "1");
-        $this->db->order_by("n_created_at","DESC");
+        $this->db->order_by("n_created_at", "DESC");
         return $this->db->get($this->table)->result();
     }
 
@@ -22,7 +28,7 @@ class Nasabah_model extends CI_Model
         $this->db->where('n_created_at >=', $date);
         $this->db->where('n_created_at <=', $date2);
         $this->db->where("isExist", "1");
-        $this->db->order_by('n_created_at',"DESC");
+        $this->db->order_by('n_created_at', "DESC");
         if ($status != "Semua")
             $this->db->where('n_status', $status);
         return $this->db->get($this->table)->result();

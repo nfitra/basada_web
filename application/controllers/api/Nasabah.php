@@ -55,6 +55,7 @@ class Nasabah extends CI_Controller
             $updateNasabah = $this->Nasabah_model->update_nasabah($dataNasabah, $where);
             $statusCode = 200;
             if ($updateNasabah) {
+                $tokenData['data'] = $this->Nasabah_model->profile($email);
                 $tokenData['message'] = "Berhasil mengupdate data nasabah";
                 $statusCode = 200;
                 http_response_code('200');

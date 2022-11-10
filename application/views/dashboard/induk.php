@@ -83,7 +83,6 @@
                                             <th>Jenis sampah</th>
                                             <th>Berat</th>
                                             <th>Harga</th>
-                                            <th>Gambar</th>
                                             <th>Jadwal</th>
                                             <th>Tanggal Request</th>
                                             <th>Catatan</th>
@@ -104,7 +103,6 @@
                                                 <td><?= xss($request->j_name) ?></td>
                                                 <td><?= xss($request->r_weight) ?></td>
                                                 <td><?= xss($request->harga) ?></td>
-                                                <td><img style="width:10em; background:#eee; padding:10px" src="<?= base_url(xss($request->r_image)) ?>" alt="<?= xss($request->r_image) ?>"></td>
                                                 <td><?= xss($request->s_day) ?>, <?= xss($request->s_time) ?> - <?= xss($request->s_weather) ?></td>
                                                 <td><?= xss($request->r_date) ?></td>
                                                 <td><?= xss($request->r_notes) ?></td>
