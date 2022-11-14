@@ -5,7 +5,7 @@
           <div class="row slider-text align-items-center justify-content-center">
             <div class="col-md-10 ftco-animate text-center">
               <h1 class="mb-4">Akses BASADA lebih mudah dengan aplikasi mobile BASADA!</h1>
-              <p><a target="_blank" href="https://drive.google.com/drive/folders/1EY_Qp8O09yrDrip7NFzkGIcNjy3cFKZ5?usp=sharing" class="btn btn-primary btn-outline-white px-4 py-3">Download Sekarang!</a></p>
+              <p><a target="_blank" href="https://drive.google.com/drive/folders/1zrtjNrGEwpM-bTHqwhY-u46T81epF_9J" class="btn btn-primary btn-outline-white px-4 py-3">Download Sekarang!</a></p>
             </div>
           </div>
         </div>

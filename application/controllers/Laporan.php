@@ -1,14 +1,16 @@
 <?php
-
 defined('BASEPATH') or exit('No direct script access allowed');
+
+require_once 'vendor/autoload.php';
+
 class Laporan extends CI_Controller
 {
     function __construct()
     {
         parent::__construct();
         is_logged_in();
-        $this->load->library("Excel");
-        $this->load->library("Pdf");
+        // $this->load->library("Excel");
+        // $this->load->library("Dompdf");
         $this->load->model('Admin_model');
         $this->load->model('Role_model');
         $this->load->model('Unit_model');
@@ -89,9 +91,260 @@ class Laporan extends CI_Controller
                 $date2 = $temp;
             }
 
-            if ($jenis == "excel")  $this->downloadExcel($laporan, $namaLaporan, $date, $date2);
-            else                    $this->downloadPDF($laporan, $namaLaporan, $date, $date2);
+            if ($jenis == "excel")  $this->exportExcel($laporan, $namaLaporan, $date, $date2);
+            else                    $this->exportPDF($laporan, $namaLaporan, $date, $date2);
         }
+    }
+
+    function exportPDF($laporan, $judul, $date = "", $date2 = "")
+    {
+        if ($laporan == "Nasabah") {
+            $status = xss_input($this->input->post('status', true));
+            $table = ["No", "Nama Nasabah", "Tanggal Lahir", "Alamat", "Kota", "Provinsi", "Kode Pos", "Kontak", "Saldo", "Waktu"];
+            $listLaporan = $this->Nasabah_model->get_data($date, $date2, $status);
+        } else if ($laporan == "Pemasukan") {
+            $table = ["No", "Jenis Sampah", "Keterangan", "Jumlah", "Total Harga", "Waktu"];
+            $listLaporan = $this->Pemasukan_model->get_data($date, $date2);
+        } else if ($laporan == "Pengeluaran") {
+            $table = ["No", "Bulan", "Jenis Pengeluaran", "Jumlah", "Harga Satuan", "Total Harga", "Bank Unit", "Keterangan"];
+            $listLaporan = $this->Pengeluaran_model->get_data($date, $date2);
+        } else if ($laporan == "Transaksi") {
+            $status = xss_input($this->input->post('kategori', true));
+            $table = ["No", "Nama Sampah", "Total Berat", "Satuan", "Total Harga"];
+            $listLaporan = $this->Transaksi_model->get_data_transaksi_kategori($date, $date2, $status);
+        }
+
+        $html = "<h3>" . $judul . "</h3>";
+
+        if ($listLaporan) {
+            if ($laporan == "Transaksi") {
+                foreach ($listLaporan as $laporan) {
+                    $transaksi = $this->Transaksi_model->get_data_transaksi(["fk_kategori" => $laporan->_id], $date, $date2, $status);
+                    $html .= '<table width="100%" cellpadding="5" border="0.5">';
+                    $html .= '<tr>
+                                <th colspan="5" align="center"><b>' . $laporan->k_name . '</b></th>
+                            </tr>
+                            <tr>
+                                <th width="10%" align="center"><b>No</b></th>
+                                <th width="45%" align="center"><b>Nama Sampah</b></th>
+                                <th width="15%" align="center"><b>Total Berat</b></th>
+                                <th width="10%" align="center"><b>Satuan</b></th>
+                                <th width="20%" align="center"><b>Total Harga</b></th>
+                            </tr>';
+                    $no = 1;
+                    $total = 0;
+                    foreach ($transaksi as $data) {
+                        $html .= '<tr>
+                                    <td align="center">' . $no++ . '</td>
+                                    <td>' . $data->j_name . '</td>
+                                    <td>' . $data->berat_total . '</td>
+                                    <td>' . $data->satuan . '</td>
+                                    <td>Rp ' . number_format($data->harga_total, 2, ',', '.') . '</td>
+                                </tr>';
+                        $total += $data->harga_total;
+                    }
+                    $html .= '<tr>
+                                <td colspan="4" align="right"><b>Total</b></td>
+                                <td><b>Rp ' . number_format($total, 2, ',', '.') . '</b></td>
+                            </tr>';
+                    $html .= '</table>';
+                    $html .= '<br/><br/><br/>';
+                }
+            } else if ($laporan == "Pemasukan") {
+                $html .= '<table cellpadding="5" border="0.5">
+                        <tr>';
+                foreach ($table as $col) {
+                    $html .= "<th align='center'><b>" . $col . "</b></th>";
+                }
+                $html .= '</tr>';
+                $no = 1;
+                foreach ($listLaporan as $data) {
+                    $html .= '<tr>
+                                <td align="center">' . $no++ . '</td>
+                                <td>' . ($data->j_name ? $data->j_name : "-") . '</td>
+                                <td>' . $data->pm_hasil . '</td>
+                                <td>' . $data->pm_jumlah . '</td>
+                                <td>Rp' . number_format($data->pm_total, 2, ',', '.') . '</td>
+                                <td>' . $data->pm_created_at . '</td>
+                            </tr>';
+                }
+                $html .= '</table>';
+            } else if ($laporan == "Pengeluaran") {
+                $html .= '<table cellpadding="5" border="0.5">
+                        <tr>';
+                foreach ($table as $col) {
+                    $html .= "<th align='center'><b>" . $col . "</b></th>";
+                }
+                $html .= '</tr>';
+                $no = 1;
+                foreach ($listLaporan as $data) {
+                    $html .= '<tr>
+                                <td align="center">' . $no++ . '</td>
+                                <td>' . $data->pk_bulan . '</td>
+                                <td>' . $data->pk_jenis . '</td>
+                                <td>' . $data->pk_jumlah . '</td>
+                                <td>Rp' . number_format($data->pk_harga, 2, ',', '.') . '</td>
+                                <td>Rp' . number_format($data->pk_total, 2, ',', '.') . '</td>
+                                <td>' . ($data->un_name ? $data->un_name : "-") . '</td>
+                                <td>' . ($data->pk_keterangan ? $data->pk_keterangan : "-") . '</td>
+                            </tr>';
+                }
+                $html .= '</table>';
+            } else if ($laporan == "Nasabah") {
+                $html .= '<table cellpadding="5" border="0.5">
+                        <tr>';
+                foreach ($table as $col) {
+                    $html .= "<th align='center'><b>" . $col . "</b></th>";
+                }
+                $html .= '</tr>';
+                $no = 1;
+                foreach ($listLaporan as $data) {
+                    $html .= '<tr>
+                                <td align="center">' . $no++ . '</td>
+                                <td>' . $data->n_name . '</td>
+                                <td>' . $data->n_dob . '</td>
+                                <td>' . $data->n_address . '</td>
+                                <td>' . $data->n_city . '</td>
+                                <td>' . $data->n_province . '</td>
+                                <td>' . $data->n_postcode . '</td>
+                                <td>' . $data->n_contact . '</td>
+                                <td>' . $data->n_balance . '</td>
+                                <td>' . $data->n_created_at . '</td>
+                            </tr>';
+                }
+                $html .= '</table>';
+            }
+        } else {
+            $html .= '<h1>Tidak Ada Data ' . $laporan . '</h1>';
+        }
+
+        $domPDF = new Dompdf\Dompdf();
+        $domPDF->setPaper('A4', 'portrait');
+        $domPDF->loadHtml($html);
+        $domPDF->render();
+        $domPDF->stream($judul . ".pdf", array("Attachment" => false));
+    }
+
+    function exportExcel($laporan, $judul, $date = "", $date2 = "")
+    {
+        if ($laporan == "Nasabah") {
+            $status = xss_input($this->input->post('status', true));
+            $table = array(
+                "No"=>'integer', 
+                "Nama Nasabah"=>'string', 
+                "Tanggal Lahir"=>'string',
+                "Alamat"=>'string',
+                "Kota"=>'string',
+                "Provinsi"=>'string',
+                "Kode Pos"=>'string',
+                "Kontak"=>'string',
+                "Saldo"=>'integer', 
+                "Waktu"=>'date'
+            );
+            $listLaporan = $this->Nasabah_model->get_data($date, $date2, $status);
+            $no = 1;
+            $data = [];
+            foreach ($listLaporan as $item) {
+                $row = [];
+                $row[] = $no++;
+                $row[] = $item->n_name;
+                $row[] = $item->n_dob;
+                $row[] = $item->n_address;
+                $row[] = $item->n_city;
+                $row[] = $item->n_province;
+                $row[] = $item->n_postcode;
+                $row[] = $item->n_contact;
+                $row[] = $item->n_balance;
+                $row[] = $item->n_created_at;
+                array_push($data, $row);
+            }
+            $this->helperExcel($judul, $table, $data);
+        } else if ($laporan == "Pemasukan") {
+            $table = array(
+                "No"=>'integer', 
+                "Jenis Sampah"=>'string',
+                "Keterangan"=>'string',
+                "Jumlah"=>'integer', 
+                "Total Harga"=>'integer', 
+                "Waktu"=>'date'
+            );
+            $listLaporan = $this->Pemasukan_model->get_data($date, $date2);
+            $no = 1;
+            $data = [];
+            foreach ($listLaporan as $item) {
+                $row = [];
+                $row[] = $no++;
+                $row[] = $item->j_name ? $item->j_name : "-";
+                $row[] = $item->pm_hasil;
+                $row[] = $item->pm_jumlah;
+                $row[] = $item->pm_total;
+                $row[] = $item->pm_created_at;
+                array_push($data, $row);
+            }
+            $this->helperExcel($judul, $table, $data);
+        } else if ($laporan == "Pengeluaran") {
+            $table = array(
+                "No"=>'integer', 
+                "Bulan"=>'string',
+                "Jenis Pengeluaran"=>'string',
+                "Jumlah"=>'integer', 
+                "Harga Satuan"=>'integer', 
+                "Total Harga"=>'integer', 
+                "Bank Unit"=>'string',
+                "Keterangan"=>'string'
+            );
+            $listLaporan = $this->Pengeluaran_model->get_data($date, $date2);
+            $no = 1;
+            $data = [];
+            foreach ($listLaporan as $item) {
+                $row = [];
+                $row[] = $no++;
+                $row[] = $item->pk_bulan;
+                $row[] = $item->pk_jenis;
+                $row[] = $item->pk_jumlah;
+                $row[] = $item->pk_harga;
+                $row[] = $item->pk_total;
+                $row[] = $item->pk_total;
+                $row[] = $item->un_name ? $item->un_name : "-";
+                $row[] = $item->pk_keterangan ? $item->pk_keterangan : "-";
+                array_push($data, $row);
+            }
+            $this->helperExcel($judul, $table, $data);
+        } else if ($laporan == "Transaksi") {
+            $status = xss_input($this->input->post('kategori', true));
+            $table = array(
+                "No"=>'integer', 
+                "Nama Sampah"=>'string',
+                "Total Berat"=>'integer', 
+                "Satuan"=>'string', 
+                "Total Harga"=>'integer'
+            );
+            $listLaporan = $this->Transaksi_model->get_data_transaksi_kategori($date, $date2, $status);
+            $no = 1;
+            $data = [];
+            foreach ($listLaporan as $laporan) {
+                $transaksi = $this->Transaksi_model->get_data_transaksi(["fk_kategori" => $laporan->_id], $date, $date2, $status);
+                foreach ($transaksi as $item) {
+                    $row = [];
+                    $row[] = $no++;
+                    $row[] = $item->j_name;
+                    $row[] = $item->berat_total;
+                    $row[] = $item->satuan;
+                    $row[] = $item->harga_total;
+                    array_push($data, $row);
+                }
+            }
+            $this->helperExcel($judul, $table, $data);
+        }
+    }
+
+    function helperExcel($judul, $header, $dataRow)
+    {
+        $writer = new XLSXWriter();
+        $writer->writeSheetHeader('Sheet1', $header);
+        foreach ($dataRow as $row)
+            $writer->writeSheetRow('Sheet1', $row);
+        $writer->writeToFile($judul . ".xlsx");
     }
 
     function downloadExcel($laporan, $judul, $date = "", $date2 = "")
@@ -204,7 +457,7 @@ class Laporan extends CI_Controller
                     $prevnum = $numrow;
 
                     $transaksi = $this->Transaksi_model->get_data_transaksi(["fk_kategori" => $laporan->_id], $date, $date2, $status);
-                    
+
                     $no = 1;
                     $total = 0;
                     foreach ($transaksi as $data) { // Lakukan looping pada variabel siswa
@@ -320,7 +573,7 @@ class Laporan extends CI_Controller
         // Set judul file excel nya
         $excel->getActiveSheet(0)->setTitle("Laporan BASADA");
         $excel->setActiveSheetIndex(0);
-        
+
         // Proses file excel
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename=' . "Laporan BASADA.xlsx"); // Set nama file excel nya

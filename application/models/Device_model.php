@@ -9,6 +9,11 @@ class Device_model extends CI_Model
         return $this->db->insert($this->table, $data);
     }
 
+    public function lastInsertedId()
+    {
+        return $this->db->insert_id();
+    }
+
     public function delete($id)
     {
         $this->db->where("id", $id);

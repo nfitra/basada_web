@@ -19,6 +19,7 @@ class Device extends CI_Controller
             $data['fk_auth'] = $this->user->email;
             $insert = $this->Device_model->insert($data);
             if ($insert) {
+                $tokenData['id_device'] = $this->Device_model->lastInsertedId($data);
                 $tokenData['message'] = "Berhasil menambahkan device";
                 $statusCode = 200;
                 http_response_code('200');
