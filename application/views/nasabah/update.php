@@ -70,7 +70,8 @@
                                     Akun
                                 </h3>
                                 <label for="">Email</label>
-                                <input type="email" placeholder="ex: your@email.com" class="form-control mb-3" name="email" value="<?= $nasabah->fk_auth ?>" disabled />
+                                <input type="email" placeholder="ex: your@email.com" class="form-control mb-3" value="<?= $nasabah->fk_auth ?>" disabled />
+                                <input type="hidden" placeholder="ex: your@email.com" class="form-control mb-3" name="email" value="<?= $nasabah->fk_auth ?>" />
 
                                 <label for="">Password</label>
                                 <?= form_error('password', '<small class="text-danger pl-3">', '</small>') ?>

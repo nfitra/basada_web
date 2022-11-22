@@ -7,10 +7,10 @@
             <div class="content bg-white p-3">
                 <a href="<?= base_url('nasabah/create') ?>" class="btn btn-sm btn-warning text-black mb-4"> <i class="fas fa-fw fa-plus-circle"></i> Tambah Nasabah</a>
                 <?php
-                    $message = $this->session->flashdata('message');
-                    if (isset($message)) {
-                        echo $message;
-                    }
+                $message = $this->session->flashdata('message');
+                if (isset($message)) {
+                    echo $message;
+                }
                 ?>
                 <table id="table-balance" class="table table-hover table-bordered">
                     <thead>
@@ -32,16 +32,16 @@
                         <?php $no = 1; ?>
                         <?php foreach ($listNasabah as $nasabah) : ?>
                             <tr>
-                                <th><?= $no++ ?></th>
-                                <td><?= xss($nasabah->n_name) ?></td>
-                                <td><?= xss($nasabah->n_dob) ?></td>
-                                <td><?= xss($nasabah->n_address) ?></td>
-                                <td><?= xss($nasabah->n_city) ?></td>
-                                <td><?= xss($nasabah->n_province) ?></td>
-                                <td><?= xss($nasabah->n_postcode) ?></td>
-                                <td><?= xss($nasabah->n_contact) ?></td>
-                                <td><?= xss($nasabah->n_status) == "offline" ? '<badge class="badge badge-danger text-white"> Offline </badge>' : '<badge class="badge badge-success text-white"> Online </badge>' ?></td>
-                                <td><?= xss($nasabah->n_balance) ?></td>
+                                <td><?= $no++ ?></td>
+                                <td><?= xss($nasabah->n_name == null ? "Belum diatur" : $nasabah->n_name)?></td>
+                                <td><?= xss($nasabah->n_dob == null ? "Belum diatur" : $nasabah->n_dob)?></td>
+                                <td><?= xss($nasabah->n_address == null ? "Belum diatur" : $nasabah->n_address)?></td>
+                                <td><?= xss($nasabah->n_city == null ? "Belum diatur" : $nasabah->n_city)?></td>
+                                <td><?= xss($nasabah->n_province == null ? "Belum diatur" : $nasabah->n_province)?></td>
+                                <td><?= xss($nasabah->n_postcode == null ? "Belum diatur" : $nasabah->n_postcode)?></td>
+                                <td><?= xss($nasabah->n_contact == null ? "Belum diatur" : $nasabah->n_contact)?></td>
+                                <td><?= xss($nasabah->n_status == null ? "Belum diatur" : $nasabah->n_status) == "offline" ? '<badge class="badge badge-danger text-white"> Offline </badge>' : '<badge class="badge badge-success text-white"> Online </badge>' ?></td>
+                                <td><?= xss($nasabah->n_balance == null ? "Belum diatur" : $nasabah->n_balance)?></td>
                                 <td>
                                     <?= ($user->r_name == "Admin Induk") ?
                                         '<a href="' . base_url("nasabah/get_mutasi_nasabah/") . $nasabah->_id . '" class="btn btn-sm btn-warning text-black">

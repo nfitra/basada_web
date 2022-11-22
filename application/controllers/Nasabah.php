@@ -324,7 +324,7 @@ class Nasabah extends CI_Controller
                 $email = xss_input($this->input->post("email", true));
                 $password = xss_input($this->input->post("password", true));
                 $dataAuth = [
-                    "password" => $password,
+                    "password" => password_hash($password, PASSWORD_BCRYPT),
                 ];
                 $where = [
                     "email" => $email

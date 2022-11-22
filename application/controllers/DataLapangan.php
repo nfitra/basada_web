@@ -136,9 +136,8 @@ class DataLapangan extends CI_Controller
                 'title' => 'Update Data Unit',
                 'active' => 'Admin Lapangan',
                 'user' => _get_user($this),
-                'unit' => $this->Unit_model->get_where(["_id" => $id])[0]
+                'unit' => $this->Unit_model->get_where(["unit._id" => $id])[0]
             );
-
             $config = [
                 [
                     'field' => 'un_name',
@@ -229,7 +228,7 @@ class DataLapangan extends CI_Controller
             $this->form_validation->set_rules($config);
 
             if ($this->form_validation->run() == FALSE) {
-                wrapper_templates($this, "unit/update", $data);
+                wrapper_templates($this, "lapangan/update", $data);
             } else {
                 $email = xss_input($this->input->post('email', true));
                 $password = xss_input($this->input->post('password', true));

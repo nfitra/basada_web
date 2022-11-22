@@ -9,7 +9,7 @@ $(document).ready(() => {
 		"#table-artikel",
 		"#table-kategori",
 		"#table-jenis-sampah",
-		"#table-balance",
+		// "#table-balance",
 		"#table-upload",
 		"#table-jadwal",
 		// "#table-request",
@@ -22,6 +22,23 @@ $(document).ready(() => {
 	listTable.forEach((table) => {
 		makeTable(table);
 	});
+});
+
+$("#table-balance").dataTable({
+	"bAutoWidth": false ,
+	aoColumns: [
+		null,
+		null,
+		null,
+		{ "sWidth": "10%" },
+		null,
+		null,
+		null,
+		null,
+		null,
+		null,
+		{ "sWidth": "18%" },
+	],
 });
 
 $("#table-request").dataTable({
@@ -38,6 +55,7 @@ $("#table-request").dataTable({
 		{ width: "20%" },
 	],
 });
+
 $("#table-jadwal-sampah").DataTable({
 	lengthMenu: [5, 10, 20, 50],
 	searching: false,

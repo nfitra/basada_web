@@ -136,7 +136,7 @@ class DataUnit extends CI_Controller
                 'title' => 'Update Data Unit',
                 'active' => 'Daftar Unit',
                 'user' => _get_user($this),
-                'unit' => $this->Unit_model->get_where(["_id" => $id])[0]
+                'unit' => $this->Unit_model->get_where(["unit._id" => $id])[0]
             );
 
             $config = [

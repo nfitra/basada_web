@@ -81,7 +81,8 @@
                                 </h3>
                                 <label for="">Email *</label> 
                                 <?= form_error('email','<small class="text-danger pl-3">','</small>') ?>
-                                <input type="email" placeholder="ex: your@email.com" class="form-control mb-3" name="email" value="<?= $unit->fk_auth ?>" disabled>
+                                <input type="email" placeholder="ex: your@email.com" class="form-control mb-3" value="<?= $unit->fk_auth ?>" disabled>
+                                <input type="hidden" placeholder="ex: your@email.com" class="form-control mb-3" name="email" value="<?= $unit->fk_auth ?>">
 
                                 <label for="">Password *</label>
                                 <?= form_error('password','<small class="text-danger pl-3">','</small>') ?>

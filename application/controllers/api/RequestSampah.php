@@ -236,7 +236,7 @@ class RequestSampah extends CI_Controller
         $config['upload_path']          = './uploads/mobile/';
         $config['file_name']            = $new_name;
         $config['allowed_types']        = 'jpg|jpeg|png';
-        $config['max_size']             = 2048;
+        $config['max_size'] = 1024 * 10;
 
         $this->load->library('upload', $config);
 

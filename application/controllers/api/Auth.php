@@ -20,7 +20,6 @@ class Auth extends CI_Controller
         $userAuth = $this->Auth_model->cek_nasabah($email);
         $statusCode = 200;
         if ($userAuth) {
-            // var_dump($userAuth);
             if ($userAuth->isActive == 1) {
                 $isPasswordValid = password_verify($password, $userAuth->password);
                 if ($isPasswordValid) {
@@ -31,18 +30,18 @@ class Auth extends CI_Controller
                     $token = _encodeToken($this, $data);
                     $data['token'] = $token;
                 } else {
-                    $data['message'] = "Password Salah";
+                    $message = "Password Salah";
+                    $data = null;
                     $statusCode = 401;
                 }
             } else {
-                $data['message'] = "Email belum di aktivasi";
+                $message = "Email belum diaktivasi";
+                $data = null;
                 $statusCode = 401;
             }
         } else {
             $userAuth = $this->Auth_model->cek_admin($email);
-            // var_dump($this->db->last_query());
             if ($userAuth) {
-                // var_dump($userAuth);
                 if ($userAuth->isActive == 1) {
                     $isPasswordValid = password_verify($password, $userAuth->password);
                     if ($isPasswordValid) {
@@ -54,14 +53,17 @@ class Auth extends CI_Controller
                         $data['token'] = $token;
                     } else {
                         $message = "Password Salah";
+                        $data = null;
                         $statusCode = 401;
                     }
                 } else {
                     $message = "Email belum di aktivasi";
+                    $data = null;
                     $statusCode = 401;
                 }
             } else {
                 $message = "Email Salah";
+                $data = null;
                 $statusCode = 401;
             }
         }
@@ -84,8 +86,6 @@ class Auth extends CI_Controller
             $insertAuth = $this->Auth_model->create_auth($dataAuth);
             $statusCode = 200;
             if ($insertAuth) {
-                // $tokenData['message'] = "Berhasil menginsert admin auth nasabah";
-                // $statusCode = 200;
                 $dataNasabah = [
                     "_id" => generate_id(),
                     "fk_auth" => $email,

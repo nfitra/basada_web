@@ -13,6 +13,7 @@ class Unit_model extends CI_Model
     {
         $this->db->join("auth", "auth.email = unit.fk_auth");
         $this->db->join("roles", "roles._id = auth.fk_role");
+        $this->db->select("unit.*");
         return $this->db->get_where($this->table, $where)->result();
     }
 
