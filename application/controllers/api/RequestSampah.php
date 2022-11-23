@@ -265,7 +265,7 @@ class RequestSampah extends CI_Controller
             if ($resultQuery) {
                 // var_dump("berhasil");
                 $message = "Berhasil mengubah data";
-                $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+                $resultData = $this->RequestSampah_model->get_detail($id);
                 $statusCode = 200;
                 http_response_code('200');
                 echo json_encode(array('status' => $statusCode, 'data' => $resultData));
@@ -294,7 +294,7 @@ class RequestSampah extends CI_Controller
         $data['r_status'] = 2;
         $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
         if ($resultQuery) {
-            $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+            $resultData = $this->RequestSampah_model->get_detail($id);
             $cekTransaksi = $this->Transaksi_model->check_transaksi($id);
             if ($cekTransaksi) {
                 $message = "Transaksi sudah pernah didaftarkan";
@@ -333,13 +333,12 @@ class RequestSampah extends CI_Controller
         $emailNasabah = $nasabah->fk_auth;
         if ($admin->un_daily_quota > 0) {
             $data['r_status'] = 1;
-            var_dump($data);
             $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
             if ($resultQuery) {
                 $message = "Menunggu Petugas Datang";
                 $message = "Request telah dikonfirmasi";
                 $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
-                $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+                $resultData = $this->RequestSampah_model->get_detail($id);
                 $statusCode = 200;
                 http_response_code('200');
                 // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
@@ -365,11 +364,9 @@ class RequestSampah extends CI_Controller
             $message = "Request anda telah ditolak";
             $resultData['message'] = "Request berhasil ditolak";
             $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
-            // var_dump($resultNotification);
-            $resultData['data'] = $this->RequestSampah_model->get_detail($id);
+            $resultData = $this->RequestSampah_model->get_detail($id);
             $statusCode = 200;
             http_response_code('200');
-            // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
             echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
         }
     }

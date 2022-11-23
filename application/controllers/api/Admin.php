@@ -52,7 +52,7 @@ class Admin extends CI_Controller
         if ($cekTabelAdmin) {
             $updateAdmin = $this->Admin_model->update_admin($dataAdmin, $where);
             if ($updateAdmin) {
-                $tokenData['data'] = $this->Admin_model->profile($email);
+                $data = $this->Admin_model->profile($email);
                 $message = "Berhasil mengupdate data admin";
                 $statusCode = 200;
                 http_response_code('200');
@@ -70,7 +70,7 @@ class Admin extends CI_Controller
                 ];
                 $updateAdmin = $this->Admin_model->create_admin($dataAdmin, $where);
                 if ($updateAdmin) {
-                    $tokenData['data'] = $this->Admin_model->profile($email);
+                    $data = $this->Admin_model->profile($email);
                     $message = "Berhasil mengupdate data admin";
                     $statusCode = 200;
                     http_response_code('200');
@@ -85,6 +85,6 @@ class Admin extends CI_Controller
                 http_response_code('401');
             }
         }
-        echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $tokenData));
+        echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $data));
     }
 }

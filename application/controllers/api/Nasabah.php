@@ -55,7 +55,7 @@ class Nasabah extends CI_Controller
             $updateNasabah = $this->Nasabah_model->update_nasabah($dataNasabah, $where);
             $statusCode = 200;
             if ($updateNasabah) {
-                $tokenData['data'] = $this->Nasabah_model->profile($email);
+                $data = $this->Nasabah_model->profile($email);
                 $message = "Berhasil mengupdate data nasabah";
                 $statusCode = 200;
                 http_response_code('200');
@@ -69,7 +69,7 @@ class Nasabah extends CI_Controller
             $statusCode = 401;
             http_response_code('401');
         }
-        echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $tokenData));
+        echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $data));
     }
 
     public function change_password()

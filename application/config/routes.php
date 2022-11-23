@@ -90,3 +90,5 @@ $route['api/nasabah/saldo']['get'] = 'api/Nasabah/get_saldo';
 
 $route['api/artikel']['get'] = 'api/Artikel/get_all_artikel';
 $route['api/artikel/(:any)']['get'] = 'api/Artikel/get_artikel_by_id/$1';
+
+$route['api/change-password/nasabah']['put'] = 'api/Nasabah/change_password';
