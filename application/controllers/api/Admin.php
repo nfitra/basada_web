@@ -53,11 +53,11 @@ class Admin extends CI_Controller
             $updateAdmin = $this->Admin_model->update_admin($dataAdmin, $where);
             if ($updateAdmin) {
                 $tokenData['data'] = $this->Admin_model->profile($email);
-                $tokenData['message'] = "Berhasil mengupdate data admin";
+                $message = "Berhasil mengupdate data admin";
                 $statusCode = 200;
                 http_response_code('200');
             } else {
-                $tokenData['message'] = "Gagal mengupdate data admin";
+                $message = "Gagal mengupdate data admin";
                 $statusCode = 500;
                 http_response_code('500');
             }
@@ -71,20 +71,20 @@ class Admin extends CI_Controller
                 $updateAdmin = $this->Admin_model->create_admin($dataAdmin, $where);
                 if ($updateAdmin) {
                     $tokenData['data'] = $this->Admin_model->profile($email);
-                    $tokenData['message'] = "Berhasil mengupdate data admin";
+                    $message = "Berhasil mengupdate data admin";
                     $statusCode = 200;
                     http_response_code('200');
                 } else {
-                    $tokenData['message'] = "Gagal mengupdate data admin";
+                    $message = "Gagal mengupdate data admin";
                     $statusCode = 500;
                     http_response_code('500');
                 }
             } else {
-                $tokenData['message'] = "Tidak ada admin dengan email ini";
+                $message = "Tidak ada admin dengan email ini";
                 $statusCode = 401;
                 http_response_code('401');
             }
         }
-        echo json_encode(array('status' => $statusCode, 'data' => $tokenData));
+        echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $tokenData));
     }
 }

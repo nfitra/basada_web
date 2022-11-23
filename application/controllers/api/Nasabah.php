@@ -56,20 +56,20 @@ class Nasabah extends CI_Controller
             $statusCode = 200;
             if ($updateNasabah) {
                 $tokenData['data'] = $this->Nasabah_model->profile($email);
-                $tokenData['message'] = "Berhasil mengupdate data nasabah";
+                $message = "Berhasil mengupdate data nasabah";
                 $statusCode = 200;
                 http_response_code('200');
             } else {
-                $tokenData['message'] = "Gagal mengupdate data nasabah";
+                $message = "Gagal mengupdate data nasabah";
                 $statusCode = 401;
                 http_response_code('401');
             }
         } else {
-            $tokenData['message'] = "Tidak ada nasabah dengan email ini";
+            $message = "Tidak ada nasabah dengan email ini";
             $statusCode = 401;
             http_response_code('401');
         }
-        echo json_encode(array('status' => $statusCode, 'data' => $tokenData));
+        echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $tokenData));
     }
 
     public function change_password()
@@ -88,19 +88,19 @@ class Nasabah extends CI_Controller
             $where = ['email' => $this->nasabah->fk_auth];
             $changePassword = $this->Auth_model->update_auth($dataPass, $where);
             if ($changePassword) {
-                $tokenData['message'] = "Berhasil mengubah password";
+                $message = "Berhasil mengubah password";
                 $statusCode = 200;
             } else {
-                $tokenData['message'] = "Gagal mengubah password";
+                $message = "Gagal mengubah password";
                 $statusCode = 401;
             }
         } else {
-            $tokenData['message'] = "Password Salah";
+            $message = "Password Salah";
             $statusCode = 401;
         }
-        $token = _encodeToken($this, $tokenData);
-        $tokenData['token'] = $token;
-        echo json_encode(array('status' => $statusCode, 'data' => $tokenData));
+        // $token = _encodeToken($this, $tokenData);
+        // $tokenData['token'] = $token;
+        echo json_encode(array('status' => $statusCode, 'message' => $message));
     }
 
     public function conv_token()

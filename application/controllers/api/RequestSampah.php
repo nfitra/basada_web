@@ -204,29 +204,28 @@ class RequestSampah extends CI_Controller
                         $title = "Permintaan penjemputan sampah baru!";
                         $message = "Dari " . $this->nasabah->n_name;
                         $resultNotification = $this->send_notification_to_admin($emailAdmin, $title, $message, $imageName);
-                        $tokenData['message'] = "Berhasil merequest sampah";
+                        $message = "Berhasil merequest sampah";
                         $statusCode = 200;
                     } else {
-                        var_dump($insertRequest);
-                        $tokenData['message'] = "Gagal merequest sampah";
+                        $message = "Gagal merequest sampah";
                         $statusCode = 400;
                     }
                 } else {
-                    $tokenData['message'] = "Minimal angkut sampah harus $min kg";
+                    $message = "Minimal angkut sampah harus $min kg";
                     $statusCode = 401;
                 }
             } else {
-                $tokenData['message'] = "Gagal upload foto sampah";
+                $message = "Gagal upload foto sampah";
                 $statusCode = 401;
             }
         } else {
-            $tokenData['message'] = "Tidak ada inputan";
+            $message = "Tidak ada inputan";
             $statusCode = 401;
         }
         if (isset($resultNotification)) {
-            echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $tokenData));
+            echo json_encode(array('status' => $statusCode, 'message' => $message, 'notification' => $resultNotification));
         } else {
-            echo json_encode(array('status' => $statusCode, 'data' => $tokenData));
+            echo json_encode(array('status' => $statusCode, 'message' => $message));
         }
     }
 
@@ -256,10 +255,8 @@ class RequestSampah extends CI_Controller
         $this->user = _checkUser($this);
         $result = $this->RequestSampah_model->get_one(['_id' => $id]);
         $requestData = parsePutRequest();
-        // var_dump($data);
         if ($requestData) {
             $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
-            // var_dump($result);
             $emailNasabah = $nasabah->fk_auth;
             $data['fk_garbage'] = $requestData['id_sampah'];
             $data['r_weight'] = $requestData['berat'];
@@ -267,13 +264,13 @@ class RequestSampah extends CI_Controller
 
             if ($resultQuery) {
                 // var_dump("berhasil");
-                $resultData['message'] = "Berhasil mengubah data";
+                $message = "Berhasil mengubah data";
                 $resultData['data'] = $this->RequestSampah_model->get_detail($id);
                 $statusCode = 200;
                 http_response_code('200');
                 echo json_encode(array('status' => $statusCode, 'data' => $resultData));
             } else {
-                $resultData['message'] = "Gagal mengubah data";
+                $message = "Gagal mengubah data";
                 $resultData['error_message'] = $resultQuery;
                 $statusCode = 500;
                 http_response_code('500');
@@ -281,10 +278,10 @@ class RequestSampah extends CI_Controller
                 echo json_encode(array('status' => $statusCode, 'data' => $resultData));
             }
         } else {
-            $tokenData['message'] = "Tidak ada inputan";
+            $message = "Tidak ada inputan";
             $statusCode = 400;
             http_response_code('400');
-            echo json_encode(array('status' => $statusCode, 'data' => $tokenData));
+            echo json_encode(array('status' => $statusCode, 'message' => $message));
         }
     }
 
@@ -300,13 +297,13 @@ class RequestSampah extends CI_Controller
             $resultData['data'] = $this->RequestSampah_model->get_detail($id);
             $cekTransaksi = $this->Transaksi_model->check_transaksi($id);
             if ($cekTransaksi) {
-                $resultData['message'] = "Transaksi sudah pernah didaftarkan";
+                $message = "Transaksi sudah pernah didaftarkan";
                 $statusCode = 200;
                 http_response_code('200');
-                echo json_encode(array('status' => $statusCode, 'data' => $resultData));
+                echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $resultData));
             } else {
                 $message = "Uang sampah telah masuk";
-                $resultData['message'] = "Selamat! Request telah selesai";
+                $message = "Selamat! Request telah selesai";
                 $this->Admin_model->decrementQuota($result->fk_admin);
 
                 $dataTransaksi = [
@@ -322,8 +319,7 @@ class RequestSampah extends CI_Controller
                 }
                 $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
 
-                // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
-                echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+                echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $resultData, 'notification' => $resultNotification));
             }
         }
     }
@@ -341,19 +337,19 @@ class RequestSampah extends CI_Controller
             $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
             if ($resultQuery) {
                 $message = "Menunggu Petugas Datang";
-                $resultData['message'] = "Request telah dikonfirmasi";
+                $message = "Request telah dikonfirmasi";
                 $resultNotification = $this->send_notification_to_nasabah($emailNasabah, $message);
                 $resultData['data'] = $this->RequestSampah_model->get_detail($id);
                 $statusCode = 200;
                 http_response_code('200');
                 // echo json_encode(array('status' => $statusCode, 'data' => $resultData));
-                echo json_encode(array('status' => $statusCode, 'notification' => $resultNotification, 'data' => $resultData));
+                echo json_encode(array('status' => $statusCode, 'message' => $message, 'data' => $resultData, 'notification' => $resultNotification));
             }
         } else {
             $statusCode = 200;
             http_response_code('200');
-            $resultData['message'] = "Maaf, kuota harian telah habis!";
-            echo json_encode(array('status' => $statusCode, 'data' => $resultData));
+            $message = "Maaf, kuota harian telah habis!";
+            echo json_encode(array('status' => $statusCode, 'message' => $message));
         }
     }
 
