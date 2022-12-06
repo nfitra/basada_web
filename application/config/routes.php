@@ -75,6 +75,8 @@ $route['api/request-by-admin-jadwal/(:any)/(:any)']['get'] = 'api/RequestSampah/
 $route['api/request/admin/jadwal/(:any)']['get'] = 'api/RequestSampah/get_request_by_current_admin_jadwal/$1';
 
 $route['api/admin']['get'] = 'api/RequestSampah/get_admin';
+$route['api/unit']['get'] = 'api/RequestSampah/get_unit';
+$route['api/unit/(:any)']['get'] = 'api/RequestSampah/get_unit_by_status/$1';
 $route['api/admin']['put'] = 'api/Admin/update_admin';
 $route['api/admin/profile']['get'] = 'api/Admin/profile';
 $route['api/sampah']['get'] = 'api/Sampah/get_sampah';

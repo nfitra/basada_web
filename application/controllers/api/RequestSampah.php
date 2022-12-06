@@ -15,6 +15,7 @@ class RequestSampah extends CI_Controller
         $this->load->model('Mutasi_model');
         $this->load->model('Device_model');
         $this->load->model('Sampah_model');
+        $this->load->model('Unit_model');
         header('Content-Type: application/json');
     }
 
@@ -46,6 +47,20 @@ class RequestSampah extends CI_Controller
     {
         $this->nasabah = _checkNasabah($this);
         $data = $this->Admin_model->get_admin();
+        echo json_encode($data);
+    }
+
+    public function get_unit()
+    {
+        $this->nasabah = _checkNasabah($this);
+        $data = $this->Unit_model->get_unit();
+        echo json_encode($data);
+    }
+
+    public function get_unit_by_status($status)
+    {
+        $this->nasabah = _checkNasabah($this);
+        $data = $this->Unit_model->get_where(['un_status' => ucfirst($status)]);
         echo json_encode($data);
     }
 
@@ -235,7 +250,7 @@ class RequestSampah extends CI_Controller
         $config['upload_path']          = './uploads/mobile/';
         $config['file_name']            = $new_name;
         $config['allowed_types']        = 'jpg|jpeg|png';
-        $config['max_size'] = 1024 * 10;
+        $config['max_size'] = 1024 * 20;
 
         $this->load->library('upload', $config);
 
