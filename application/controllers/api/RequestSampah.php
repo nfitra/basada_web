@@ -43,27 +43,6 @@ class RequestSampah extends CI_Controller
         var_dump($result);
     }
 
-    public function get_admin()
-    {
-        $this->nasabah = _checkNasabah($this);
-        $data = $this->Admin_model->get_admin();
-        echo json_encode($data);
-    }
-
-    public function get_unit()
-    {
-        $this->nasabah = _checkNasabah($this);
-        $data = $this->Unit_model->get_unit();
-        echo json_encode($data);
-    }
-
-    public function get_unit_by_status($status)
-    {
-        $this->nasabah = _checkNasabah($this);
-        $data = $this->Unit_model->get_where(['un_status' => ucfirst($status)]);
-        echo json_encode($data);
-    }
-
     public function get_min_sampah()
     {
         $this->nasabah = _checkNasabah($this);
@@ -110,11 +89,48 @@ class RequestSampah extends CI_Controller
         echo json_encode($data);
     }
 
+    public function get_request_by_unit($id)
+    {
+        $this->user = _checkUser($this);
+        $data = $this->RequestSampah_model->get_by_id_unit($id);
+        for ($i = 0; $i < count($data); $i++) {
+            if ($data[$i]->r_status == 0)
+                $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
+            else if ($data[$i]->r_status == 1)
+                $data[$i]->keterangan = "Menunggu Petugas Datang";
+            else if ($data[$i]->r_status == -1)
+                $data[$i]->keterangan = "Request anda telah ditolak";
+            else
+                $data[$i]->keterangan = "Uang sampah telah masuk";
+            unset($data[$i]->r_status);
+        }
+        echo json_encode($data);
+    }
+
     public function get_request_by_current_admin()
     {
         $this->admin = _checkUser($this);
         // $this->nasabah = _checkNasabah($this);
         $data = $this->RequestSampah_model->get_by_email_admin($this->admin->email);
+        for ($i = 0; $i < count($data); $i++) {
+            if ($data[$i]->r_status == 0)
+                $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
+            else if ($data[$i]->r_status == 1)
+                $data[$i]->keterangan = "Menunggu Petugas Datang";
+            else if ($data[$i]->r_status == -1)
+                $data[$i]->keterangan = "Request anda telah ditolak";
+            else
+                $data[$i]->keterangan = "Uang sampah telah masuk";
+            unset($data[$i]->r_status);
+        }
+        echo json_encode($data);
+    }
+
+    public function get_request_by_current_unit()
+    {
+        $this->admin = _checkUser($this);
+        // $this->nasabah = _checkNasabah($this);
+        $data = $this->RequestSampah_model->get_by_email_unit($this->admin->email);
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]->r_status == 0)
                 $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
@@ -146,10 +162,44 @@ class RequestSampah extends CI_Controller
         echo json_encode($data);
     }
 
+    public function get_request_by_unit_jadwal($idUnit, $idJadwal)
+    {
+        $this->user = _checkUser($this);
+        $data = $this->RequestSampah_model->get_by_id_unit_n_jadwal($idUnit, $idJadwal);
+        for ($i = 0; $i < count($data); $i++) {
+            if ($data[$i]->r_status == 0)
+                $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
+            else if ($data[$i]->r_status == 1)
+                $data[$i]->keterangan = "Menunggu Petugas Datang";
+            else if ($data[$i]->r_status == -1)
+                $data[$i]->keterangan = "Request anda telah ditolak";
+            else
+                $data[$i]->keterangan = "Uang sampah telah masuk";
+        }
+        echo json_encode($data);
+    }
+
     public function get_request_by_current_admin_jadwal($idJadwal)
     {
         $this->admin = _checkUser($this);
         $data = $this->RequestSampah_model->get_by_email_admin_n_jadwal($this->admin->email, $idJadwal);
+        for ($i = 0; $i < count($data); $i++) {
+            if ($data[$i]->r_status == 0)
+                $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
+            else if ($data[$i]->r_status == 1)
+                $data[$i]->keterangan = "Menunggu Petugas Datang";
+            else if ($data[$i]->r_status == -1)
+                $data[$i]->keterangan = "Request anda telah ditolak";
+            else
+                $data[$i]->keterangan = "Uang sampah telah masuk";
+        }
+        echo json_encode($data);
+    }
+
+    public function get_request_by_current_unit_jadwal($idJadwal)
+    {
+        $this->unit = _checkUser($this);
+        $data = $this->RequestSampah_model->get_by_email_unit_n_jadwal($this->unit->email, $idJadwal);
         for ($i = 0; $i < count($data); $i++) {
             if ($data[$i]->r_status == 0)
                 $data[$i]->keterangan = "Sampah Belum Dikonfirmasi";
@@ -195,7 +245,7 @@ class RequestSampah extends CI_Controller
                 $long = $this->input->post('long');
                 $r_weight = $this->input->post('r_weight');
                 $fk_jadwal = $this->input->post('fk_jadwal');
-                $fk_admin = $this->input->post('fk_admin');
+                $fk_unit = $this->input->post('fk_unit');
                 $imageName = xss_input($upload['pic']);
 
                 if ($r_weight >= $min) {
@@ -209,16 +259,16 @@ class RequestSampah extends CI_Controller
                         "r_notes" => "input by nasabah",
                         "r_location" => "POINT(" . $lat . " " . $long . ")",
                         "fk_jadwal" => $fk_jadwal,
-                        "fk_admin" => $fk_admin,
+                        "fk_unit" => $fk_unit,
                         "r_status" => 0
                     ];
                     $insertRequest = $this->RequestSampah_model->create_request($dataRequest);
                     if ($insertRequest) {
-                        $admin = $this->Admin_model->get_where(["_id" => $fk_admin])[0];
-                        $emailAdmin = $admin->fk_auth;
+                        $unit = $this->Unit_model->get_where(["unit._id" => $fk_unit])[0];
+                        $emailUnit = $unit->fk_auth;
                         $title = "Permintaan penjemputan sampah baru!";
                         $message = "Dari " . $this->nasabah->n_name;
-                        $resultNotification = $this->send_notification_to_admin($emailAdmin, $title, $message, $imageName);
+                        $resultNotification = $this->send_notification_to_admin($emailUnit, $title, $message, $imageName);
                         $message = "Berhasil merequest sampah";
                         $statusCode = 200;
                     } else {
@@ -271,8 +321,7 @@ class RequestSampah extends CI_Controller
         $result = $this->RequestSampah_model->get_one(['_id' => $id]);
         $requestData = parsePutRequest();
         if ($requestData) {
-            $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
-            $emailNasabah = $nasabah->fk_auth;
+            // $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
             $data['fk_garbage'] = $requestData['id_sampah'];
             $data['r_weight'] = $requestData['berat'];
             $resultQuery = $this->RequestSampah_model->update_request($data, ["_id" => $id]);
@@ -319,7 +368,7 @@ class RequestSampah extends CI_Controller
             } else {
                 $message = "Uang sampah telah masuk";
                 $message = "Selamat! Request telah selesai";
-                $this->Admin_model->decrementQuota($result->fk_admin);
+                $this->Unit_model->decrementQuota($result->fk_unit);
 
                 $dataTransaksi = [
                     "_id" => generate_id(),
@@ -344,7 +393,7 @@ class RequestSampah extends CI_Controller
         $this->user = _checkUser($this);
         $result = $this->RequestSampah_model->get_one(['_id' => $id]);
         $nasabah = $this->Nasabah_model->get_where(["_id" => $result->fk_nasabah])[0];
-        $admin = $this->Admin_model->get_admin_by_id($result->fk_admin);
+        $admin = $this->Unit_model->get_unit_by_id($result->fk_unit);
         $emailNasabah = $nasabah->fk_auth;
         if ($admin->un_daily_quota > 0) {
             $data['r_status'] = 1;

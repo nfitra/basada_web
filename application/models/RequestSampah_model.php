@@ -112,6 +112,32 @@ class RequestSampah_model extends CI_Model
         return $this->db->query($sql)->result();
     }
 
+    function get_by_id_unit_n_jadwal($idUnit, $idJadwal)
+    {
+        $sql = "SELECT request_sampah._id,
+        request_sampah.r_date,
+        jenis_sampah.j_name as jenis_sampah, 
+        unit.un_name as nama_admin, 
+        nasabah.n_name as nama_nasabah,
+        request_sampah.r_weight,
+        request_sampah.r_image,
+        request_sampah.r_notes,
+        request_sampah.r_status,
+        request_sampah.r_pickup_date,
+        ST_AsGeoJSON(r_location) as location, 
+        CONCAT(schedule.s_day, ' ',schedule.s_time) as jadwal_jemput,
+        (request_sampah.r_weight * jenis_sampah.j_price) as harga
+        FROM request_sampah 
+        JOIN unit ON request_sampah.fk_unit = unit._id
+        JOIN jenis_sampah ON request_sampah.fk_garbage = jenis_sampah._id
+        JOIN nasabah ON request_sampah.fk_nasabah = nasabah._id
+        JOIN schedule on request_sampah.fk_jadwal = schedule._id
+        WHERE request_sampah.fk_unit = '" . $idUnit . "'
+        AND request_sampah.fk_jadwal = '" . $idJadwal . "'
+        ORDER BY request_sampah.r_date DESC;";
+        return $this->db->query($sql)->result();
+    }
+
     function get_by_email_admin_n_jadwal($emailAdmin, $idJadwal)
     {
         $sql = "SELECT request_sampah._id,
@@ -133,6 +159,32 @@ class RequestSampah_model extends CI_Model
         JOIN nasabah ON request_sampah.fk_nasabah = nasabah._id
         JOIN schedule on request_sampah.fk_jadwal = schedule._id
         WHERE admin.fk_auth = '" . $emailAdmin . "'
+        AND request_sampah.fk_jadwal = '" . $idJadwal . "'
+        ORDER BY request_sampah.r_date DESC;";
+        return $this->db->query($sql)->result();
+    }
+
+    function get_by_email_unit_n_jadwal($emailUnit, $idJadwal)
+    {
+        $sql = "SELECT request_sampah._id,
+        request_sampah.r_date,
+        jenis_sampah.j_name as jenis_sampah, 
+        unit.un_name as nama_admin, 
+        nasabah.n_name as nama_nasabah,
+        request_sampah.r_weight,
+        request_sampah.r_image,
+        request_sampah.r_notes,
+        request_sampah.r_status,
+        request_sampah.r_pickup_date,
+        ST_AsGeoJSON(r_location) as location, 
+        CONCAT(schedule.s_day, ' ',schedule.s_time) as jadwal_jemput,
+        (request_sampah.r_weight * jenis_sampah.j_price) as harga
+        FROM request_sampah 
+        JOIN unit ON request_sampah.fk_unit = unit._id
+        JOIN jenis_sampah ON request_sampah.fk_garbage = jenis_sampah._id
+        JOIN nasabah ON request_sampah.fk_nasabah = nasabah._id
+        JOIN schedule on request_sampah.fk_jadwal = schedule._id
+        WHERE unit.fk_auth = '" . $emailUnit . "'
         AND request_sampah.fk_jadwal = '" . $idJadwal . "'
         ORDER BY request_sampah.r_date DESC;";
         return $this->db->query($sql)->result();
@@ -185,6 +237,27 @@ class RequestSampah_model extends CI_Model
         return $this->db->query($sql)->result();
     }
 
+    function get_by_id_unit($id)
+    {
+        $sql = "SELECT request_sampah._id,
+        request_sampah.r_date,
+        jenis_sampah.j_name as jenis_sampah, 
+        unit.un_name as nama_admin, 
+        nasabah.n_name as nama_nasabah,
+        request_sampah.r_weight,
+        request_sampah.r_image,
+        request_sampah.r_status,
+        CONCAT(schedule.s_day, ' ',schedule.s_time) as jadwal_jemput,
+        (request_sampah.r_weight * jenis_sampah.j_price) as harga
+        FROM request_sampah 
+        JOIN unit ON request_sampah.fk_unit = unit._id
+        JOIN jenis_sampah ON request_sampah.fk_garbage = jenis_sampah._id
+        JOIN nasabah ON request_sampah.fk_nasabah = nasabah._id
+        JOIN schedule on request_sampah.fk_jadwal = schedule._id
+        WHERE request_sampah.fk_unit = '" . $id . "';";
+        return $this->db->query($sql)->result();
+    }
+
     function get_by_email_admin($email)
     {
         $sql = "SELECT request_sampah._id,
@@ -203,6 +276,27 @@ class RequestSampah_model extends CI_Model
         JOIN nasabah ON request_sampah.fk_nasabah = nasabah._id
         JOIN schedule on request_sampah.fk_jadwal = schedule._id
         WHERE admin.fk_auth = '" . $email . "';";
+        return $this->db->query($sql)->result();
+    }
+
+    function get_by_email_unit($email)
+    {
+        $sql = "SELECT request_sampah._id,
+        request_sampah.r_date,
+        jenis_sampah.j_name as jenis_sampah, 
+        unit.un_name as nama_admin, 
+        nasabah.n_name as nama_nasabah,
+        request_sampah.r_weight,
+        request_sampah.r_image,
+        request_sampah.r_status,
+        CONCAT(schedule.s_day, ' ',schedule.s_time) as jadwal_jemput,
+        (request_sampah.r_weight * jenis_sampah.j_price) as harga
+        FROM request_sampah 
+        JOIN unit ON request_sampah.fk_unit = unit._id
+        JOIN jenis_sampah ON request_sampah.fk_garbage = jenis_sampah._id
+        JOIN nasabah ON request_sampah.fk_nasabah = nasabah._id
+        JOIN schedule on request_sampah.fk_jadwal = schedule._id
+        WHERE unit.fk_auth = '" . $email . "';";
         return $this->db->query($sql)->result();
     }
 
