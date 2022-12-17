@@ -46,10 +46,10 @@ class Device extends CI_Controller
             http_response_code('200');
         } else {
             $message = "Gagal menghapus sampah";
-            $tokenData['error_message'] = $delete;
+            $message = $delete;
             $statusCode = 500;
             http_response_code('500');
         }
-        echo json_encode(array('status' => $statusCode,'message' => $message, 'data' => $tokenData));
+        echo json_encode(array('status' => $statusCode,'message' => $message));
     }
 }
