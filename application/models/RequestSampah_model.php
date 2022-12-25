@@ -199,7 +199,8 @@ class RequestSampah_model extends CI_Model
         request_sampah.fk_garbage,
         request_sampah.fk_nasabah,
         jenis_sampah.j_name as jenis_sampah, 
-        admin.un_name as nama_admin, 
+        -- admin.un_name as nama_admin, 
+        unit.un_name as nama_unit, 
         nasabah.n_name as nama_nasabah,
         request_sampah.r_weight,
         request_sampah.r_image,
@@ -210,7 +211,8 @@ class RequestSampah_model extends CI_Model
         CONCAT(schedule.s_day, ' ',schedule.s_time) as jadwal_jemput,
         (request_sampah.r_weight * jenis_sampah.j_price) as harga
         FROM request_sampah 
-        JOIN admin ON request_sampah.fk_admin = admin._id
+        -- JOIN admin ON request_sampah.fk_admin = admin._id
+        JOIN unit ON request_sampah.fk_unit = unit._id
         JOIN jenis_sampah ON request_sampah.fk_garbage = jenis_sampah._id
         JOIN nasabah ON request_sampah.fk_nasabah = nasabah._id
         JOIN schedule on request_sampah.fk_jadwal = schedule._id

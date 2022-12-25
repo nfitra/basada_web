@@ -113,16 +113,16 @@ class DataLapangan extends CI_Controller
 
                 $insertUnit = $this->Unit_model->create_unit($dataUnit);
                 if ($insertUnit) {
-                    _set_flashdata($this, 'message', 'success', 'Tambah unit berhasil', 'dataUnit');
+                    _set_flashdata($this, 'message', 'success', 'Tambah unit berhasil', 'dataLapangan');
                 } else {
                     $deleteDataAuth = [
                         "email" => $email
                     ];
                     $deleteAuth = $this->Auth_model->delete_auth($deleteDataAuth);
-                    _set_flashdata($this, 'message', 'danger', 'Tambah unit gagal', 'dataUnit');
+                    _set_flashdata($this, 'message', 'danger', 'Tambah unit gagal', 'dataLapangan');
                 }
             } else {
-                _set_flashdata($this, 'message', 'danger', 'Tambah data auth gagal', 'dataUnit');
+                _set_flashdata($this, 'message', 'danger', 'Tambah data auth gagal', 'dataLapangan');
             }
         }
     }
@@ -130,10 +130,10 @@ class DataLapangan extends CI_Controller
     function update($id = "")
     {
         if ($id == "") {
-            _set_flashdata($this, 'message', 'success', 'Silahkan Masukkan ID yang valid', 'dataUnit');
+            _set_flashdata($this, 'message', 'success', 'Silahkan Masukkan ID yang valid', 'dataLapangan');
         } else {
             $data = array(
-                'title' => 'Update Data Unit',
+                'title' => 'Update Data Lapangan',
                 'active' => 'Admin Lapangan',
                 'user' => _get_user($this),
                 'unit' => $this->Unit_model->get_where(["unit._id" => $id])[0]
@@ -152,7 +152,7 @@ class DataLapangan extends CI_Controller
             $this->form_validation->set_rules($config);
 
             if ($this->form_validation->run() == FALSE) {
-                wrapper_templates($this, "unit/update", $data);
+                wrapper_templates($this, "lapangan/update", $data);
             } else {
                 $email = xss_input($this->input->post('email', true));
                 $password = xss_input($this->input->post('password', true));
@@ -184,18 +184,18 @@ class DataLapangan extends CI_Controller
                         "un_contact" => $un_contact
                     ];
 
-                    $insertUnit = $this->Unit_model->update_unit($dataUnit, ['_id' => $id]);
-                    if ($insertUnit) {
-                        _set_flashdata($this, 'message', 'success', 'Ubah data unit berhasil', 'dataUnit');
+                    $updateUnit = $this->Unit_model->update_unit($dataUnit, ['_id' => $id]);
+                    if ($updateUnit) {
+                        _set_flashdata($this, 'message', 'success', 'Ubah data lapangan berhasil', 'dataLapangan');
                     } else {
                         $deleteDataAuth = [
                             "email" => $email
                         ];
                         $deleteAuth = $this->Auth_model->delete_auth($deleteDataAuth);
-                        _set_flashdata($this, 'message', 'danger', 'Ubah data unit gagal', 'dataUnit');
+                        _set_flashdata($this, 'message', 'danger', 'Ubah data lapangan gagal', 'dataLapangan');
                     }
                 } else {
-                    _set_flashdata($this, 'message', 'danger', 'Ubah data auth gagal', 'dataUnit');
+                    _set_flashdata($this, 'message', 'danger', 'Ubah data auth gagal', 'dataLapangan');
                 }
             }
         }
@@ -204,10 +204,10 @@ class DataLapangan extends CI_Controller
     function updateAuth($id = "")
     {
         if ($id == "") {
-            _set_flashdata($this, 'message', 'success', 'Silahkan Masukkan ID yang valid', 'dataUnit');
+            _set_flashdata($this, 'message', 'success', 'Silahkan Masukkan ID yang valid', 'dataLapangan');
         } else {
             $data = array(
-                'title' => 'Update Data Unit',
+                'title' => 'Update Data Lapangan',
                 'active' => 'Admin Lapangan',
                 'user' => _get_user($this),
                 'unit' => $this->Unit_model->get_where(["_id" => $id])[0]
@@ -237,9 +237,9 @@ class DataLapangan extends CI_Controller
                 ];
                 $updateAuth = $this->Auth_model->update_auth($dataAuth, ['email' => $email]);
                 if ($updateAuth) {
-                    _set_flashdata($this, 'message', 'success', 'Ubah data auth berhasil', 'dataUnit');
+                    _set_flashdata($this, 'message', 'success', 'Ubah data auth berhasil', 'dataLapangan');
                 } else {
-                    _set_flashdata($this, 'message', 'danger', 'Ubah data auth gagal', 'dataUnit');
+                    _set_flashdata($this, 'message', 'danger', 'Ubah data auth gagal', 'dataLapangan');
                 }
             }
         }
@@ -251,12 +251,12 @@ class DataLapangan extends CI_Controller
             $where = ["_id" => $id];
             $delete = $this->Unit_model->delete_unit($where);
             if ($delete) {
-                _set_flashdata($this, 'message', 'success', 'Hapus Unit berhasil', 'dataUnit');
+                _set_flashdata($this, 'message', 'success', 'Hapus Unit berhasil', 'dataLapangan');
             } else {
-                _set_flashdata($this, 'message', 'danger', 'Hapus Unit Gagal', 'dataUnit');
+                _set_flashdata($this, 'message', 'danger', 'Hapus Unit Gagal', 'dataLapangan');
             }
         } else {
-            _set_flashdata($this, 'message', 'danger', 'Silahkan masukkan ID yang valid', 'dataUnit');
+            _set_flashdata($this, 'message', 'danger', 'Silahkan masukkan ID yang valid', 'dataLapangan');
         }
     }
 }

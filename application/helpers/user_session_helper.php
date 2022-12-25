@@ -2,7 +2,6 @@
 
 function _set_flashdata($user_data, $type, $class, $message, $redirect)
 {
-
     $user_data->session->set_flashdata($type, '<div class="alert alert-' . $class . '" role="alert"> ' . $message . ' </div>');
     redirect($redirect);
 }

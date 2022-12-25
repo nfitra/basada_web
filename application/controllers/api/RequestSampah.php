@@ -218,6 +218,7 @@ class RequestSampah extends CI_Controller
         $this->user = _checkUser($this);
         $data = $this->RequestSampah_model->get_detail($id);
         // var_dump($data);
+        // die;
         if ($data->r_status == 0)
             $data->keterangan = "Sampah Belum Dikonfirmasi";
         else if ($data->r_status == 1)
