@@ -297,14 +297,16 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase
      * @return string Unique Reference
      */
     protected function getUniqueID()
-    {
-        if (function_exists('posix_getpid')) {
-            $baseUnique = posix_getpid();
-        } else {
-            $baseUnique = mt_rand();
-        }
-        return uniqid($baseUnique, true);
-    }
+	{
+		if (function_exists('posix_getpid')) {
+			$baseUnique = posix_getpid();
+		} else {
+			$baseUnique = random_int(100000, 999999); // cryptographically secure fallback
+		}
+
+		$randomPart = bin2hex(random_bytes(5)); // 10 hex chars = 5 bytes
+		return uniqid($baseUnique . $randomPart, true);
+	}
 
     /**
      * Clone the cell collection

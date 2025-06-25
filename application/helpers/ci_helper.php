@@ -2,7 +2,7 @@
 
 function generate_id()
 {
-    return md5(base64_encode(microtime(true))); 
+    return bin2hex(random_bytes(16)); // 32-character secure ID
 }
 
 function is_logged_in()

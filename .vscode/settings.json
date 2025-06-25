@@ -1,0 +1,7 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "http-localhost-9000-",
+        "projectKey": "basada_html2"
+    },
+    "php.version": "7.4"
+}

@@ -6,7 +6,7 @@ function sendFCM($title, $body, $registrationIds, $imageUrl = null)
   $url = 'https://fcm.googleapis.com/fcm/send';
 
   // Put your Server Key here
-  $apiKey = "AAAAPNnOx1w:APA91bHuxcXKHaC2RWW2vdfvTxbryp9v4S8HEfqu5PH5SS-W-gE0MEmXhFyyCf_4krou0s4O_2U1nYITRM0AFCP0ZZSR94xrq2qK-_Ik4XuRlofklMIVF09THzqrdYI_ZQXaGBCO2w1R";
+  $apiKey = $this->config->item('fcm_google_api_key');
 
   // Compile headers in one variable
   $headers = array(

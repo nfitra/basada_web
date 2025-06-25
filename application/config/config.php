@@ -27,7 +27,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 // $config['base_url'] = 'http://localhost/banksampah-pekanbaru/html/';
 // $config['base_url'] = 'https://banksampah.pekanbaru.go.id/';
 // $config['base_url'] = 'https://banksampah.pekanbaru.go.id/';
-$config['base_url'] = 'http://localhost:8000/';
+$config['base_url'] = 'http://localhost/banksampah/html2/';
 
 /*
 |--------------------------------------------------------------------------
@@ -525,3 +525,7 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+
+// CUSTOM CONFIGS
+$config['fcm_google_api_key'] = '"AAAAPNnOx1w:APA91bHuxcXKHaC2RWW2vdfvTxbryp9v4S8HEfqu5PH5SS-W-gE0MEmXhFyyCf_4krou0s4O_2U1nYITRM0AFCP0ZZSR94xrq2qK-_Ik4XuRlofklMIVF09THzqrdYI_ZQXaGBCO2w1R"';

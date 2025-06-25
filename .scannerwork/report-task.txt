@@ -1,0 +1,6 @@
+projectKey=basada_html2
+serverUrl=http://localhost:9000
+serverVersion=25.6.0.109173
+dashboardUrl=http://localhost:9000/dashboard?id=basada_html2
+ceTaskId=d3fde09b-5bba-40b0-8db8-3d68eef628d4
+ceTaskUrl=http://localhost:9000/api/ce/task?id=d3fde09b-5bba-40b0-8db8-3d68eef628d4
